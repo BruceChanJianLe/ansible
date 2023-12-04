@@ -4,9 +4,9 @@
     mode: 0700
     state: directory
   tags:
-  - dotfiles
-  - install
   - ssh
+  - dotfiles
+  - setup
 
 - name: Install cjl ssh key
   ansible.builtin.copy:
@@ -15,19 +15,19 @@
     mode: 0600
     decrypt: "{{ enable_decryption }}"
   tags:
-  - dotfiles
-  - install
   - ssh
+  - dotfiles
+  - setup
 
 - name: Install cjl ssh key public
-  copy:
+  ansible.builtin.copy:
     src: "{{ cjl_source_key }}.pub"
     dest: "{{ cjl_dest_key }}.pub"
     mode: 0644
   tags:
-  - dotfiles
-  - install
   - ssh
+  - dotfiles
+  - setup
 
 - name: Ensure bri .ssh directory exists.
   file:
@@ -35,30 +35,30 @@
     mode: 0700
     state: directory
   tags:
-  - dotfiles
-  - install
   - ssh
+  - dotfiles
+  - setup
 
 - name: Install bri ssh key
-  copy:
+  ansible.builtin.copy:
     src: "{{ bri_source_key }}"
     dest: "{{ bri_dest_key }}"
     mode: 0600
     decrypt: "{{ enable_decryption }}"
   tags:
-  - dotfiles
-  - install
   - ssh
+  - dotfiles
+  - setup
 
 - name: Install bri ssh key public
-  copy:
+  ansible.builtin.copy:
     src: "{{ bri_source_key }}.pub"
     dest: "{{ bri_dest_key }}.pub"
     mode: 0644
   tags:
-  - dotfiles
-  - install
   - ssh
+  - dotfiles
+  - setup
 
 - name: Set authorized key took from file
   authorized_key:
