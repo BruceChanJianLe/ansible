@@ -9,7 +9,7 @@
   - ssh
 
 - name: Install cjl ssh key
-  copy:
+  ansible.builtin.copy:
     src: "{{ cjl_source_key }}"
     dest: "{{ cjl_dest_key }}"
     mode: 0600
