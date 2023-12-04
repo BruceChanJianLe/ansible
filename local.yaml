@@ -4,6 +4,7 @@
     cjl_dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_cjl"
     bri_source_key: "./.ssh/id_bri"
     bri_dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_bri"
+    enable_decryption: false
 
   pre_tasks:
   - name: Update Apt
@@ -18,3 +19,4 @@
 
   tasks:
     - include: tasks/ssh.yml
+    - include: tasks/dotfiles.yml

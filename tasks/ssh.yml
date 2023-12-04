@@ -13,7 +13,7 @@
     src: "{{ cjl_source_key }}"
     dest: "{{ cjl_dest_key }}"
     mode: 0600
-    decrypt: false
+    decrypt: {{ enable_decryption }}
   tags:
   - dotfiles
   - install
@@ -44,6 +44,7 @@
     src: "{{ bri_source_key }}"
     dest: "{{ bri_dest_key }}"
     mode: 0600
+    decrypt: {{ enable_decryption }}
   tags:
   - dotfiles
   - install
