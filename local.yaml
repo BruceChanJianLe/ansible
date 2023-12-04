@@ -6,15 +6,15 @@
     bri_dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_bri"
 
   pre_tasks:
-    - name: Update Apt
-      become: true
-      apt:
-        force_apt_get: true
-      update_cache: true
-      state: present
-      tags:
-        - install
-    - core
+  - name: Update Apt
+    become: true
+    apt:
+      force_apt_get: true
+    update_cache: true
+    state: present
+    tags:
+    - install
+  - core
 
   tasks:
-    - include: tasks/ssh.yml
+  - include: tasks/ssh.yml

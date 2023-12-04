@@ -4,9 +4,9 @@
     mode: 0700
     state: directory
   tags:
-    - dotfiles
-    - install
-    - ssh
+  - dotfiles
+  - install
+  - ssh
 
 - name: Install cjl ssh key
   copy:
@@ -14,9 +14,9 @@
     dest: "{{ cjl_dest_key }}"
     mode: 0600
   tags:
-    - dotfiles
-    - install
-    - ssh
+  - dotfiles
+  - install
+  - ssh
 
 - name: Install cjl ssh key public
   copy:
@@ -24,9 +24,9 @@
     dest: "{{ cjl_dest_key }}.pub"
     mode: 0644
   tags:
-    - dotfiles
-    - install
-    - ssh
+  - dotfiles
+  - install
+  - ssh
 
 - name: Ensure bri .ssh directory exists.
   file:
@@ -34,9 +34,9 @@
     mode: 0700
     state: directory
   tags:
-    - dotfiles
-    - install
-    - ssh
+  - dotfiles
+  - install
+  - ssh
 
 - name: Install bri ssh key
   copy:
@@ -44,9 +44,9 @@
     dest: "{{ bri_dest_key }}"
     mode: 0600
   tags:
-    - dotfiles
-    - install
-    - ssh
+  - dotfiles
+  - install
+  - ssh
 
 - name: Install bri ssh key public
   copy:
@@ -54,9 +54,9 @@
     dest: "{{ bri_dest_key }}.pub"
     mode: 0644
   tags:
-    - dotfiles
-    - install
-    - ssh
+  - dotfiles
+  - install
+  - ssh
 
 - name: Set authorized key took from file
   authorized_key:
@@ -64,4 +64,4 @@
     state: present
     key: "{{ lookup('env', 'HOME') }}/.ssh/id_cjl.pub"
   with_fileglob:
-    - "{{ lookup('env', 'HOME') }}/.ssh/*.pub"
+  - "{{ lookup('env', 'HOME') }}/.ssh/*.pub"
