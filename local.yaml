@@ -10,11 +10,11 @@
     become: true
     apt:
       force_apt_get: true
-    update_cache: true
-    state: present
+      update_cache: true
+      state: present
     tags:
-    - install
-  - core
+      - install
+      - core
 
   tasks:
-  - include: tasks/ssh.yml
+    - include: tasks/ssh.yml
