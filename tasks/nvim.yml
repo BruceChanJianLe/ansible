@@ -1,25 +1,25 @@
-# - name: Ensure Downloads directory exists.
-#   file:
-#     dest: "{{ lookup('env', 'HOME') }}/Downloads"
-#     mode: 0755
-#     # https://www.warp.dev/terminus/linux-file-permissions-explained#:~:text=To%20check%20permissions%20of%20all,and%20w%20is%20%22world.%22
-#     state: directory
-#   tags:
-#   - setup
-#   - nvim
-#
-# - name: Get ripgrep
-#   ansible.builtin.get_url:
-#     url: https://github.com/BurntSushi/ripgrep/releases/download/14.0.3/ripgrep_14.0.3-1_amd64.deb
-#     dest: "{{ lookup('env', 'HOME') }}/Downloads/ripgrep_14.0.3-1_amd64.deb"
-#     mode: '0664'
-#   tags:
-#     - setup
-#     - nvim
+- name: Ensure Downloads directory exists.
+  file:
+    dest: "{{ lookup('env', 'HOME') }}/Downloads"
+    mode: 0755
+    # https://www.warp.dev/terminus/linux-file-permissions-explained#:~:text=To%20check%20permissions%20of%20all,and%20w%20is%20%22world.%22
+    state: directory
+  tags:
+  - setup
+  - nvim
+
+- name: Get ripgrep
+  ansible.builtin.get_url:
+    url: "https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_version }}/ripgrep_{{ ripgrep_version }}-1_amd64.deb"
+    dest: "{{ lookup('env', 'HOME') }}/Downloads/ripgrep_{{ ripgrep_version }}-1_amd64.deb"
+    mode: '0664'
+  tags:
+    - setup
+    - nvim
 
 - name: Install ripgrep
   ansible.builtin.apt:
-    deb: 'https://github.com/BurntSushi/ripgrep/releases/download/14.0.3/ripgrep_14.0.3-1_amd64.deb'
+    deb: 'https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_version }}/ripgrep_{{ ripgrep_version }}-1_amd64.deb'
   tags:
     - setup
     - nvim
