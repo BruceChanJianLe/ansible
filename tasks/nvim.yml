@@ -21,7 +21,9 @@
     - neovim
 
 - name: Install plugins
-  shell: "nvim +PackerSync +qa"
+  shell: nvim +PackerSync +qa
+  args:
+    stdin: "\n\n\n"
   tags:
     - setup
     - neovim
