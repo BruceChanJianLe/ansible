@@ -21,6 +21,7 @@
     - tmux
 
 - name: Install tmux plugins
+  
   shell: "cd {{ lookup('env', 'HOME') }}/.config/tmux/plugins/tpm/bindings && ./install_plugins"
   tags:
     - setup
