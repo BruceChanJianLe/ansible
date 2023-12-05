@@ -1,5 +1,6 @@
 - name: Install xsel and xclip
   apt:
+    update_cache: yes
     name:
       - xsel
       - xclip
