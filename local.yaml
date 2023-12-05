@@ -21,3 +21,4 @@
     - include: tasks/ssh.yml
     - include: tasks/base16.yml
     - include: tasks/dotfiles.yml
+    - include: tasks/nvim.yml
