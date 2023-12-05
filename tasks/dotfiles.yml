@@ -17,14 +17,8 @@
     - setup
     - dotfiles
 
-- name: Source .bashrc
-  shell: . $HOME/.bashrc
-  tags:
-    - setup
-    - dotfiles
-
 - name: Stop showing untrack files
-  shell: config config --local status.showUntrackedFiles no
+  shell: /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME config --local status.showUntrackedFiles no
   tags:
     - setup
     - dotfiles
