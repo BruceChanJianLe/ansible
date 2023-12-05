@@ -12,7 +12,13 @@
     - dotfiles
 
 - name: Setup dotfiles
-  shell: /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout master -f && source $HOME/.bashrc && config config --local status.showUntrackedFiles no
+  shell: /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout master -f
+  tags:
+    - setup
+    - dotfiles
+
+- name: Setup dotfiles
+  shell: source $HOME/.bashrc
   tags:
     - setup
     - dotfiles
