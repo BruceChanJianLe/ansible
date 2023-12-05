@@ -17,9 +17,14 @@
     - setup
     - dotfiles
 
-- name: Setup dotfiles
-  shell: source $HOME/.bashrc
-  executable: /bin/bash
+- name: Source .bashrc
+  shell: . $HOME/.bashrc
+  tags:
+    - setup
+    - dotfiles
+
+- name: Stop showing untrack files
+  shell: config config --local status.showUntrackedFiles no
   tags:
     - setup
     - dotfiles
