@@ -1,66 +1,66 @@
-# - name: Ensure Downloads directory exists.
-#   file:
-#     dest: "{{ lookup('env', 'HOME') }}/Downloads"
-#     mode: 0755
-#     # https://www.warp.dev/terminus/linux-file-permissions-explained#:~:text=To%20check%20permissions%20of%20all,and%20w%20is%20%22world.%22
-#     state: directory
-#   tags:
-#   - setup
-#   - nvim
-#
-# - name: Get ripgrep
-#   ansible.builtin.get_url:
-#     url: "https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_version }}/ripgrep_{{ ripgrep_version }}-1_amd64.deb"
-#     dest: "{{ lookup('env', 'HOME') }}/Downloads/ripgrep_{{ ripgrep_version }}-1_amd64.deb"
-#     mode: '0664'
-#   tags:
-#     - setup
-#     - nvim
-#
-# - name: Install ripgrep
-#   ansible.builtin.apt:
-#     deb: 'https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_version }}/ripgrep_{{ ripgrep_version }}-1_amd64.deb'
-#   tags:
-#     - setup
-#     - nvim
-#
-# - name: Get fd
-#   ansible.builtin.get_url:
-#     url: "https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_amd64.deb"
-#     dest: "{{ lookup('env', 'HOME') }}/Downloads/fd-musl_{{ fd_version }}_amd64.deb"
-#     mode: '0664'
-#   tags:
-#     - setup
-#     - nvim
-#
-# - name: Install fd
-#   ansible.builtin.apt:
-#     deb: 'https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_amd64.deb'
-#   tags:
-#     - setup
-#     - nvim
-#
-# - name: Get Packer
-#   ansible.builtin.git:
-#     repo: 'https://github.com/wbthomason/packer.nvim'
-#     dest: "{{ lookup('env', 'HOME') }}/.local/share/nvim/site/pack/packer/start/packer.nvim"
-#   tags:
-#     - setup
-#     - nvim
-#
-# - name: Clone nvim
-#   ansible.builtin.git:
-#     repo: 'https://github.com/brucechanjianle/nvim.git'
-#     dest: "{{ lookup('env', 'HOME') }}/.config/nvim"
-#   tags:
-#     - setup
-#     - nvim
-#
-# - name: Build nvim
-#   shell: "cd {{ lookup('env', 'HOME') }}/.config/nvim && ./install_neovim.bash -a true -d true"
-#   tags:
-#     - setup
-#     - nvim
+- name: Ensure Downloads directory exists.
+  file:
+    dest: "{{ lookup('env', 'HOME') }}/Downloads"
+    mode: 0755
+    # https://www.warp.dev/terminus/linux-file-permissions-explained#:~:text=To%20check%20permissions%20of%20all,and%20w%20is%20%22world.%22
+    state: directory
+  tags:
+  - setup
+  - nvim
+
+- name: Get ripgrep
+  ansible.builtin.get_url:
+    url: "https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_version }}/ripgrep_{{ ripgrep_version }}-1_amd64.deb"
+    dest: "{{ lookup('env', 'HOME') }}/Downloads/ripgrep_{{ ripgrep_version }}-1_amd64.deb"
+    mode: '0664'
+  tags:
+    - setup
+    - nvim
+
+- name: Install ripgrep
+  ansible.builtin.apt:
+    deb: 'https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_version }}/ripgrep_{{ ripgrep_version }}-1_amd64.deb'
+  tags:
+    - setup
+    - nvim
+
+- name: Get fd
+  ansible.builtin.get_url:
+    url: "https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_amd64.deb"
+    dest: "{{ lookup('env', 'HOME') }}/Downloads/fd-musl_{{ fd_version }}_amd64.deb"
+    mode: '0664'
+  tags:
+    - setup
+    - nvim
+
+- name: Install fd
+  ansible.builtin.apt:
+    deb: 'https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_amd64.deb'
+  tags:
+    - setup
+    - nvim
+
+- name: Get Packer
+  ansible.builtin.git:
+    repo: 'https://github.com/wbthomason/packer.nvim'
+    dest: "{{ lookup('env', 'HOME') }}/.local/share/nvim/site/pack/packer/start/packer.nvim"
+  tags:
+    - setup
+    - nvim
+
+- name: Clone nvim
+  ansible.builtin.git:
+    repo: 'https://github.com/brucechanjianle/nvim.git'
+    dest: "{{ lookup('env', 'HOME') }}/.config/nvim"
+  tags:
+    - setup
+    - nvim
+
+- name: Build nvim
+  shell: "cd {{ lookup('env', 'HOME') }}/.config/nvim && ./install_neovim.bash -a true -d true"
+  tags:
+    - setup
+    - nvim
 
 - name: Install nvim plugins
   become: no
