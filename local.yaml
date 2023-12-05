@@ -11,8 +11,10 @@
   - name: Update Apt
     become: true
     apt:
+      upgrade: yes
       force_apt_get: true
       update_cache: true
+      cache_valid_time: 86400 #One day
       state: present
     tags:
       - setup
