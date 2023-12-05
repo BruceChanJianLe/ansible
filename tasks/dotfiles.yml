@@ -1,17 +1,18 @@
 - name: Cloning dotfiles
   ansible.builtin.git:
-    repo: 'github.com:brucechanjianle/dotfiles.git'
+    repo: 'https://github.com/BruceChanJianLe/dotfiles.git'
     dest: "{{ lookup('env', 'HOME') }}/.dotfiles"
     recursive: yes
     update: yes
     accept_hostkey: yes
     version: master
+    bare: true
   tags:
     - setup
     - dotfiles
 
 - name: Setup dotfiles
-  shell: cd $HOME/.dotfiles && ./ubuntu
+  shell: /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout master -f && source $HOME/.bashrc && config config --local status.showUntrackedFiles no
   tags:
     - setup
     - dotfiles
