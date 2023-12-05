@@ -1,3 +1,13 @@
+- name: Install xsel and xclip
+  apt:
+    name:
+      - xsel
+      - xclip
+    state: present
+  tags:
+    - setup
+    - tmux
+
 - name: Clone tmux
   ansible.builtin.git:
     repo: 'https://github.com/brucechanjianle/tmux.git'
