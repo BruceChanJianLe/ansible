@@ -19,6 +19,7 @@
 
 - name: Setup dotfiles
   shell: source $HOME/.bashrc
+  executable: /bin/bash
   tags:
     - setup
     - dotfiles
