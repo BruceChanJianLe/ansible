@@ -11,8 +11,8 @@
     - setup
     - dotfiles
 
-- name: Setup dotfiles
-  shell: /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout master -f
+- name: Checkout to master branch
+  shell: /usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout "{{ dotfile_branch }}" -f
   tags:
     - setup
     - dotfiles

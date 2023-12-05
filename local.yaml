@@ -4,6 +4,7 @@
     cjl_dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_cjl"
     bri_source_key: "./.ssh/id_bri"
     bri_dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_bri"
+    dotfile_branch: "master"
     enable_decryption: false
 
   pre_tasks:
