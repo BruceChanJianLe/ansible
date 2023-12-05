@@ -21,8 +21,7 @@
     - tmux
 
 - name: Install tmux plugins
-  
-  shell: "export TMUX_PLUGIN_MANAGER_PATH={{ lookup('env', 'HOME') }}/.config/tmux/plugins/tpm/bindings && cd {{ lookup('env', 'HOME') }}/.config/tmux/plugins/tpm/bindings && ./install_plugins"
+  shell: "tmux new-session -n install 'cd {{ lookup('env', 'HOME') }}/.config/tmux/plugins/tpm/bindings && ./install_plugins'"
   tags:
     - setup
     - tmux
