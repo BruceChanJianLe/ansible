@@ -22,3 +22,4 @@
     - include: tasks/base16.yml
     - include: tasks/dotfiles.yml
     - include: tasks/nvim.yml
+    - include: tasks/tmux.yml

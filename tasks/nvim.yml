@@ -4,26 +4,25 @@
     dest: "{{ lookup('env', 'HOME') }}/.local/share/nvim/site/pack/packer/start/packer.nvim"
   tags:
     - setup
-    - neovim
+    - nvim
 
-- name: Clone Neovim
+- name: Clone nvim
   ansible.builtin.git:
     repo: 'https://github.com/brucechanjianle/nvim.git'
     dest: "{{ lookup('env', 'HOME') }}/.config/nvim"
   tags:
     - setup
-    - neovim
+    - nvim
 
-- name: Build neovim
+- name: Build nvim
   shell: "cd {{ lookup('env', 'HOME') }}/.config/nvim && ./install_neovim.bash -a true -d true"
   tags:
     - setup
-    - neovim
+    - nvim
 
-- name: Install plugins
-  shell: nvim +PackerSync +qa
-  args:
-    stdin: "\n\n\n"
+- name: Install nvim plugins
+  shell: nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+  # https://github.com/wbthomason/packer.nvim/issues/502
   tags:
     - setup
-    - neovim
+    - nvim

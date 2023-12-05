@@ -1,0 +1,19 @@
+- name: Clone tmux
+  ansible.builtin.git:
+    repo: 'https://github.com/brucechanjianle/tmux.git'
+    dest: "{{ lookup('env', 'HOME') }}/.config/tmux"
+  tags:
+    - setup
+    - tmux
+
+- name: Build tmux
+  shell: "cd {{ lookup('env', 'HOME') }}/.config/tmux && ./install_tmux.bash -a true -d true"
+  tags:
+    - setup
+    - tmux
+
+- name: Install tmux plugins
+  shell: "cd {{ lookup('env', 'HOME') }}/.config/tmux/plugins/tpm/bindings && ./install_plugins"
+  tags:
+    - setup
+    - tmux
