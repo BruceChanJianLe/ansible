@@ -1,3 +1,19 @@
+- name: Get ripgrep
+  ansible.builtin.get_url:
+    repo: 'https://github.com/BurntSushi/ripgrep/releases/download/14.0.3/ripgrep_14.0.3-1_amd64.deb'
+    dest: "{{ lookup('env', 'HOME') }}/Downloads/"
+  tags:
+    - setup
+    - nvim
+
+# - name: Get fd
+#   ansible.builtin.git:
+#     repo: 'https://github.com/wbthomason/packer.nvim'
+#     dest: "{{ lookup('env', 'HOME') }}/.local/share/nvim/site/pack/packer/start/packer.nvim"
+#   tags:
+#     - setup
+#     - nvim
+
 - name: Get Packer
   ansible.builtin.git:
     repo: 'https://github.com/wbthomason/packer.nvim'
