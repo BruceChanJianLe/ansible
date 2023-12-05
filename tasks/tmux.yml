@@ -30,7 +30,7 @@
     - tmux
 
 - name: Install tmux plugins
-  shell: "tmux new-session -n install 'cd {{ lookup('env', 'HOME') }}/.config/tmux/plugins/tpm/bindings && ./install_plugins'"
+  shell: "tmux new-session -n install -d && tmux send-keys -t install 'cd {{ lookup('env', 'HOME') }}/.config/tmux/plugins/tpm/bindings && ./install_plugins'"
   tags:
     - setup
     - tmux
