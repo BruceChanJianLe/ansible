@@ -1,0 +1,37 @@
+# Core packages
+- name: Install core packages
+  apt:
+    name:
+      - build-essential
+      - cmake
+      - cppcheck
+      - gdb
+      - git
+      - libbluetooth-dev
+      - libcwiid-dev
+      - libgoogle-glog-dev
+      - libspnav-dev
+      - libusb-dev
+      - lsb-release
+      - python3-dbg
+      - python3-empy
+      - python3-numpy
+      - python3-setuptools
+      - python3-pip
+      - python3-venv
+      - software-properties-common
+      - sudo
+      - vim
+      - wget
+      - net-tools
+      - iputils-ping
+      - libyaml-cpp-dev
+      - tmux
+      - curl
+      - htop
+      - bash-completion
+      - bc
+      - ansible
+  tags:
+    - setup
+    - core
