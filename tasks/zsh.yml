@@ -1,0 +1,13 @@
+- name: Clone zsh
+  ansible.builtin.git:
+    repo: 'https://github.com/brucechanjianle/zsh.git'
+    dest: "{{ lookup('env', 'HOME') }}/.config/zsh"
+  tags:
+    - setup
+    - zsh
+
+- name: Install zsh
+  shell: "cd {{ lookup('env', 'HOME') }}/.config/zsh && ./install_zsh.bash -a true -d true -s true"
+  tags:
+    - setup
+    - zsh
