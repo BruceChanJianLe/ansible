@@ -7,7 +7,7 @@
     - zsh
 
 - name: Install zsh
-  shell: "cd {{ lookup('env', 'HOME') }}/.config/zsh && ./install_zsh.bash -a true -d true -s true"
+  shell: "cd {{ lookup('env', 'HOME') }}/.config/zsh && ./install_zsh.bash -a true -s true"
   tags:
     - setup
     - zsh
