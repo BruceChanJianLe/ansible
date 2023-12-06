@@ -30,7 +30,7 @@
     - tmux
 
 # - name: Install tmux plugins
-#   shell: "tmux new-session -n install -d && tmux send-keys -t install 'cd {{ lookup('env', 'HOME') }}/.config/tmux/plugins/tpm/bindings && ./install_plugins'"
+#   shell: "cd {{ lookup('env', 'HOME') }}/.config/tmux/plugins/tpm/bindings && ./install_plugins"
 #   # https://stackoverflow.com/questions/68925949/running-server-in-tmux-through-ansible
 #   tags:
 #     - setup
