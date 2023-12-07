@@ -1,13 +1,34 @@
 # Core packages
-- name: Install core packages
+- name: Install build essential
   apt:
     name:
       - build-essential
+  tags:
+    - setup
+    - core
+
+- name: Install cmake
+  apt:
+    name:
       - cmake
       - cppcheck
       - gdb
+  tags:
+    - setup
+    - core
+
+- name: Install git and ssh
+  apt:
+    name:
       - git
-      - openssh-client
+      - ssh
+  tags:
+    - setup
+    - core
+
+- name: Install other dev packages
+  apt:
+    name:
       - libgoogle-glog-dev
       - libspnav-dev
       - libusb-dev
