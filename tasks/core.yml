@@ -1,34 +1,19 @@
 # Core packages
-- name: Install build essential
+- name: Install developer packages
+  become: yes
   apt:
     name:
       - build-essential
-  tags:
-    - setup
-    - core
-
-- name: Install cmake
-  apt:
-    name:
       - cmake
       - cppcheck
       - gdb
-  tags:
-    - setup
-    - core
-
-- name: Install git and ssh
-  apt:
-    name:
       - git
       - ssh
-  tags:
-    - setup
-    - core
-
-- name: Install other dev packages
-  apt:
-    name:
+      - libwrap0
+      - ncurses-term 
+      - openssh-server
+      - openssh-sftp-server
+      - ssh-import-id
       - libgoogle-glog-dev
       - libspnav-dev
       - libusb-dev
@@ -42,3 +27,45 @@
   tags:
     - setup
     - core
+
+# - name: Install cmake
+#   apt:
+#     name:
+#       - cmake
+#       - cppcheck
+#       - gdb
+#   tags:
+#     - setup
+#     - core
+#
+# - name: Install git and ssh
+#   become: yes
+#   apt:
+#     name:
+#       - git
+#       - ssh
+#       - libwrap0
+#       - ncurses-term 
+#       - openssh-server
+#       - openssh-sftp-server
+#       - ssh-import-id
+#   tags:
+#     - setup
+#     - core
+#
+# - name: Install other dev packages
+#   apt:
+#     name:
+#       - libgoogle-glog-dev
+#       - libspnav-dev
+#       - libusb-dev
+#       - lsb-release
+#       - software-properties-common
+#       - wget
+#       - net-tools
+#       - curl
+#       - bc
+#       - ansible
+#   tags:
+#     - setup
+#     - core
