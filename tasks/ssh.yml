@@ -8,16 +8,16 @@
   - dotfiles
   - setup
 
-- name: Install cjl ssh key
-  ansible.builtin.copy:
-    src: "{{ cjl_source_key }}"
-    dest: "{{ cjl_dest_key }}"
-    mode: 0600
-    decrypt: false
-  tags:
-  - ssh
-  - dotfiles
-  - setup
+# - name: Install cjl ssh key
+#   ansible.builtin.copy:
+#     src: "{{ cjl_source_key }}"
+#     dest: "{{ cjl_dest_key }}"
+#     mode: 0600
+#     decrypt: false
+#   tags:
+#   - ssh
+#   - dotfiles
+#   - setup
 
 - name: Install cjl ssh key public
   ansible.builtin.copy:
