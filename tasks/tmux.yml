@@ -1,4 +1,5 @@
 - name: Install xsel and xclip
+  become: yes
   apt:
     name:
       - xsel
