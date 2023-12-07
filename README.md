@@ -10,4 +10,12 @@ tasks:
     - dotfiles
   - dotfiles.yml
 
-ansible-playbook local.yaml -e "enable_decryption=true" --ask-vault-pass
+Setting up new laptop
+```bash
+ANSIBLE_ASK_VAULT_PASS=True ansible-pull -U https://github.com/brucechanjianle/ansible --ask-vault-pass -e "enable_decryption=true"
+```
+
+Setting up docker
+```bash
+ansible-pull -U https://github.com/brucechanjianle/ansible
+```
