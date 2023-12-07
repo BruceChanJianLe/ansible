@@ -21,6 +21,4 @@ ansible-pull -U https://github.com/brucechanjianle/ansible -e "dotfile_branch=do
 ```
 
 Additional Steps:
-- Source your bashrc (if using bash)
-- Start zsh, let zap do its thing (if using zsh)
 - Install your tmux plugin
