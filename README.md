@@ -1,14 +1,12 @@
 tags:
-  - setup
+  - setup (all)
+  - core
   - ssh
+  - base16
+  - nvim
+  - tmux
+  - zsh
   - dotfiles
-
-tasks:
-  - ssh.yml
-    - setup
-    - ssh
-    - dotfiles
-  - dotfiles.yml
 
 Setting up new laptop
 ```bash
@@ -19,6 +17,3 @@ Setting up docker
 ```bash
 ansible-pull -U https://github.com/brucechanjianle/ansible -e "dotfile_branch=docker"
 ```
-
-Additional Steps:
-- Install your tmux plugin
