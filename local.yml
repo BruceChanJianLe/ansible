@@ -22,7 +22,7 @@
       - setup
 
   tasks:
-    # - include: tasks/core.yml
+    - include: tasks/core.yml
     - include: tasks/ssh.yml
     - include: tasks/base16.yml
     - include: tasks/nvim.yml

@@ -11,3 +11,9 @@
   tags:
     - setup
     - zsh
+
+- name: Change shell to zsh
+  shell: chsh -s $(which zsh)
+  tags:
+    - setup
+    - zsh
