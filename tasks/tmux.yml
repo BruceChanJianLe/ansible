@@ -30,9 +30,20 @@
     - setup
     - tmux
 
-# - name: Install tmux plugins
-#   shell: "cd {{ lookup('env', 'HOME') }}/.config/tmux/plugins/tpm/bindings && ./install_plugins"
-#   # https://stackoverflow.com/questions/68925949/running-server-in-tmux-through-ansible
-#   tags:
-#     - setup
-#     - tmux
+- name: Install tmux plugins
+  vars:
+    tmux_plugin_dir: "{{ lookup('env', 'HOME') }}/.config/tmux/plugins"
+    tmux_plugins:
+      - { name: "tpm", repo: "https://github.com/tmux-plugins/tpm.git", version: "master" }
+      - { name: "tmux-resurrect", repo: "https://github.com/tmux-plugins/tmux-resurrect.git", version: "master" }
+      - { name: "tmux-continuum", repo: "https://github.com/tmux-plugins/tmux-continuum.git", version: "master" }
+      - { name: "tmux-notify", repo: "https://github.com/rickstaa/tmux-notify.git", version: "main" }
+  ansible.builtin.git:
+    repo: "{{ item['repo'] }}"
+    dest: "{{ tmux_plugin_dir }}/{{ item['name'] }}"
+    version: "{{ item['version'] }}"
+    force: yes
+  with_items: "{{ tmux_plugins }}"
+  tags:
+    - setup
+    - tmux
