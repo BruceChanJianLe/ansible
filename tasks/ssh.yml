@@ -60,6 +60,16 @@
   - dotfiles
   - setup
 
+- name: Copy ssh config file
+  ansible.builtin.copy:
+    src: ./.ssh/config
+    dest: "{{ lookup('env', 'HOME') }}.ssh/config"
+    mode: 0644
+  tags:
+  - ssh
+  - dotfiles
+  - setup
+
 - name: Set authorized key took from file
   authorized_key:
     user: "{{ lookup('env', 'USER') }}"
