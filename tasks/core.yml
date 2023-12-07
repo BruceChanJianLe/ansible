@@ -7,7 +7,7 @@
       - cppcheck
       - gdb
       - git
-      - ssh
+      - openssh-client
       - libgoogle-glog-dev
       - libspnav-dev
       - libusb-dev
