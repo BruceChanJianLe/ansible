@@ -17,5 +17,10 @@ ANSIBLE_ASK_VAULT_PASS=True ansible-pull -U https://github.com/brucechanjianle/a
 
 Setting up docker
 ```bash
-ansible-pull -U https://github.com/brucechanjianle/ansible
+ansible-pull -U https://github.com/brucechanjianle/ansible -e "dotfile_branch=docker"
 ```
+
+Additional Steps:
+- Source your bashrc (if using bash)
+- Start zsh, let zap do its thing (if using zsh)
+- Install your tmux plugin
