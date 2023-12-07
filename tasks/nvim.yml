@@ -18,6 +18,7 @@
     - nvim
 
 - name: Install ripgrep
+  become: yes
   ansible.builtin.apt:
     deb: 'https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_version }}/ripgrep_{{ ripgrep_version }}-1_amd64.deb'
   tags:
@@ -34,6 +35,7 @@
     - nvim
 
 - name: Install fd
+  become: yes
   ansible.builtin.apt:
     deb: 'https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_amd64.deb'
   tags:
