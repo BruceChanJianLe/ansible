@@ -15,7 +15,7 @@
 
 - name: Change shell to zsh
   become: yes
-  shell: chsh -s $(which zsh)
+  shell: sudo chsh -s $(which zsh)
   tags:
     - setup
     - zsh
@@ -28,4 +28,3 @@
   tags:
     - setup
     - zsh
-
