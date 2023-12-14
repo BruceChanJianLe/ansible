@@ -1,3 +1,13 @@
+- name: Make backup .bashrc
+  ansible.builtin.copy:
+    src: "{{ lookup('env', 'HOME') }}/.bashrc"
+    dest: "{{ lookup('env', 'HOME') }}/.ori.bashrc"
+    mode: 0644
+    decrypt: false
+  tags:
+  - setup
+  - dotfiles
+
 - name: Cloning dotfiles
   ansible.builtin.git:
     repo: 'https://github.com/BruceChanJianLe/dotfiles.git'
