@@ -2,7 +2,17 @@
   ansible.builtin.copy:
     src: "{{ lookup('env', 'HOME') }}/.bashrc"
     dest: "{{ lookup('env', 'HOME') }}/.ori.bashrc"
-    mode: 0644
+    mode: 0664
+    decrypt: false
+  tags:
+  - setup
+  - dotfiles
+
+- name: Make backup .bash_aliases
+  ansible.builtin.copy:
+    src: "{{ lookup('env', 'HOME') }}/.bash_aliases"
+    dest: "{{ lookup('env', 'HOME') }}/.ori.bash_aliases"
+    mode: 0664
     decrypt: false
   tags:
   - setup
