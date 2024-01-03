@@ -8,12 +8,21 @@
   - setup
   - dotfiles
 
+- name: Check .bash_aliases exist
+  ansible.builtin.stat:
+    path: "{{ lookup('env', 'HOME') }}/.bash_aliases"
+  register: bal
+  tags:
+  - setup
+  - dotfiles
+
 - name: Make backup .bash_aliases
   ansible.builtin.copy:
     src: "{{ lookup('env', 'HOME') }}/.bash_aliases"
     dest: "{{ lookup('env', 'HOME') }}/.ori.bash_aliases"
     mode: 0664
     decrypt: false
+  when: bal.stat.exists
   tags:
   - setup
   - dotfiles
