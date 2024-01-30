@@ -29,3 +29,4 @@
     - include: tasks/tmux.yml
     - include: tasks/zsh.yml
     - include: tasks/dotfiles.yml
+    - include: tasks/p-aliases.yml
