@@ -7,6 +7,7 @@ tags:
   - tmux
   - zsh
   - dotfiles
+  - private_aliases
 
 Install dependencies (ansible, git)
 ```bash
