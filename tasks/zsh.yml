@@ -1,5 +1,5 @@
 - name: Clone zsh
-  ansible.builtin.git:
+  git:
     repo: 'https://github.com/brucechanjianle/zsh.git'
     dest: "{{ lookup('env', 'HOME') }}/.config/zsh"
     version: "{{ dotfile_branch }}"

@@ -9,7 +9,7 @@
   - nvim
 
 - name: Get ripgrep
-  ansible.builtin.get_url:
+  get_url:
     url: "https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_version }}/ripgrep_{{ ripgrep_version }}-1_amd64.deb"
     dest: "{{ lookup('env', 'HOME') }}/Downloads/ripgrep_{{ ripgrep_version }}-1_amd64.deb"
     mode: '0664'
@@ -19,14 +19,14 @@
 
 - name: Install ripgrep
   become: yes
-  ansible.builtin.apt:
+  apt:
     deb: 'https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_version }}/ripgrep_{{ ripgrep_version }}-1_amd64.deb'
   tags:
     - setup
     - nvim
 
 - name: Get fd
-  ansible.builtin.get_url:
+  get_url:
     url: "https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_amd64.deb"
     dest: "{{ lookup('env', 'HOME') }}/Downloads/fd-musl_{{ fd_version }}_amd64.deb"
     mode: '0664'
@@ -36,14 +36,14 @@
 
 - name: Install fd
   become: yes
-  ansible.builtin.apt:
+  apt:
     deb: 'https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_amd64.deb'
   tags:
     - setup
     - nvim
 
 - name: Get Packer
-  ansible.builtin.git:
+  git:
     repo: 'https://github.com/wbthomason/packer.nvim'
     dest: "{{ lookup('env', 'HOME') }}/.local/share/nvim/site/pack/packer/start/packer.nvim"
   tags:
@@ -51,7 +51,7 @@
     - nvim
 
 - name: Clone nvim
-  ansible.builtin.git:
+  git:
     repo: 'https://github.com/brucechanjianle/nvim.git'
     dest: "{{ lookup('env', 'HOME') }}/.config/nvim"
   tags:

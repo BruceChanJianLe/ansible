@@ -1,5 +1,5 @@
 - name: Cloning private aliases
-  ansible.builtin.git:
+  git:
     repo: 'git@github.com:BruceChanJianLe/ssh.git'
     dest: "{{ lookup('env', 'HOME') }}/.config/p_aliases"
     recursive: no
