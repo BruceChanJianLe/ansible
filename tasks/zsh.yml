@@ -20,11 +20,11 @@
     - setup
     - zsh
 
-- name: Install fzf
-  become: yes
-  apt:
-    name:
-      - fzf
-  tags:
-    - setup
-    - zsh
+# - name: Install fzf
+#   become: yes
+#   apt:
+#     name:
+#       - fzf
+#   tags:
+#     - setup
+#     - zsh
