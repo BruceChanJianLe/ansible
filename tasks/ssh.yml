@@ -9,7 +9,7 @@
   - setup
 
 - name: Install cjl ssh key
-  ansible.builtin.copy:
+  copy:
     src: "{{ cjl_source_key }}"
     dest: "{{ cjl_dest_key }}"
     mode: 0600
@@ -20,7 +20,7 @@
   - setup
 
 - name: Install cjl ssh key public
-  ansible.builtin.copy:
+  copy:
     src: "{{ cjl_source_key }}.pub"
     dest: "{{ cjl_dest_key }}.pub"
     mode: 0664
@@ -30,7 +30,7 @@
   - setup
 
 - name: Install bri ssh key
-  ansible.builtin.copy:
+  copy:
     src: "{{ bri_source_key }}"
     dest: "{{ bri_dest_key }}"
     mode: 0600
@@ -41,7 +41,7 @@
   - setup
 
 - name: Install bri ssh key public
-  ansible.builtin.copy:
+  copy:
     src: "{{ bri_source_key }}.pub"
     dest: "{{ bri_dest_key }}.pub"
     mode: 0664
@@ -51,7 +51,7 @@
   - setup
 
 - name: Copy ssh config file
-  ansible.builtin.copy:
+  copy:
     src: ./.ssh/config
     dest: "{{ lookup('env', 'HOME') }}/.ssh/config"
     mode: 0664
