@@ -9,7 +9,7 @@
     - tmux
 
 - name: Clone tmux
-  git:
+  ansible.builtin.git:
     repo: 'https://github.com/brucechanjianle/tmux.git'
     dest: "{{ lookup('env', 'HOME') }}/.config/tmux"
   tags:
@@ -30,7 +30,7 @@
       - { name: "tmux-resurrect", repo: "https://github.com/tmux-plugins/tmux-resurrect.git", version: "master" }
       - { name: "tmux-continuum", repo: "https://github.com/tmux-plugins/tmux-continuum.git", version: "master" }
       - { name: "tmux-notify", repo: "https://github.com/rickstaa/tmux-notify.git", version: "main" }
-  git:
+  ansible.builtin.git:
     repo: "{{ item['repo'] }}"
     dest: "{{ tmux_plugin_dir }}/{{ item['name'] }}"
     version: "{{ item['version'] }}"
