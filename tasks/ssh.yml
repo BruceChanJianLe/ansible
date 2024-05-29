@@ -1,6 +1,6 @@
 - name: Ensure .ssh directory exists.
   file:
-    dest: "{{ lookup('env', 'HOME') }}/.ssh"
+    dest: "{{ ansible_env.HOME }}/.ssh"
     mode: 0700
     state: directory
   tags:
@@ -53,7 +53,7 @@
 - name: Copy ssh config file
   ansible.builtin.copy:
     src: ./.ssh/config
-    dest: "{{ lookup('env', 'HOME') }}/.ssh/config"
+    dest: "{{ ansible_env.HOME }}/.ssh/config"
     mode: 0664
   tags:
   - ssh
@@ -62,8 +62,8 @@
 
 - name: Set authorized key took from file
   authorized_key:
-    user: "{{ lookup('env', 'USER') }}"
+    user: "{{ ansible_env.HOME }}"
     state: present
-    key: "{{ lookup('env', 'HOME') }}/.ssh/id_cjl.pub"
+    key: "{{ ansible_env.HOME }}/.ssh/id_cjl.pub"
   with_fileglob:
-  - "{{ lookup('env', 'HOME') }}/.ssh/cjl.pub"
+  - "{{ ansible_env.HOME }}/.ssh/cjl.pub"

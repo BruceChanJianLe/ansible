@@ -1,9 +1,9 @@
-- hosts: localhost
+- hosts: all
   vars:
     cjl_source_key: "./.ssh/id_cjl"
-    cjl_dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_cjl"
+    cjl_dest_key: "{{ ansible_env.HOME }}/.ssh/id_cjl"
     bri_source_key: "./.ssh/id_bri"
-    bri_dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_bri"
+    bri_dest_key: "{{ ansible_env.HOME }}/.ssh/id_bri"
     dotfile_branch: "master"
     enable_decryption: false
     ripgrep_version: 14.0.3
