@@ -1,5 +1,5 @@
 [localhost]
 localhost ansible_connection=local
 
-[others]
-pc1 ansible_host=192.168.10.100 ansible_user=developer
+# [others]
+# pc1 ansible_host=192.168.10.100 ansible_user=developer
