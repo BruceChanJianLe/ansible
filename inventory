@@ -1,2 +1,5 @@
-isera2@192.168.10.105
-isera2@192.168.10.107
+[localhost]
+localhost ansible_connection=local
+
+[others]
+pc1 ansible_host=192.168.10.100 ansible_user=developer
