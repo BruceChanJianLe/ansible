@@ -7,11 +7,9 @@
     - setup
     - zsh
 
+
 - name: Install zsh
-  expect:
-    command: "{{ ansible_env.HOME }}/.config/zsh/install_zsh.bash -a true"
-    responses:
-      "Reinstall Zap\\? \\[y/N\\]": "N\n"
+  shell: "{{ ansible_env.HOME }}/.config/zsh/install_zsh.bash -a true"
   tags:
     - setup
     - zsh

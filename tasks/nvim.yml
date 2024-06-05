@@ -59,7 +59,7 @@
     - nvim
 
 - name: Build nvim
-  shell: "cd {{ ansible_env.HOME }}/.config/nvim && ./install_neovim.bash -a true -d true"
+  shell: "{{ ansible_env.HOME }}/.config/nvim/install_neovim.bash -a true -d true"
   tags:
     - setup
     - nvim

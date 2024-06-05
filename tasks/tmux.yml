@@ -17,7 +17,7 @@
     - tmux
 
 - name: Build tmux
-  shell: "cd {{ ansible_env.HOME }}/.config/tmux && ./install_tmux.bash -a true -d true"
+  shell: "{{ ansible_env.HOME }}/.config/tmux/install_tmux.bash -a true -d true"
   tags:
     - setup
     - tmux
