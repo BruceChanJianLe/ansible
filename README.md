@@ -28,3 +28,6 @@ Setting up for a specific group of users defined in inventory file
 ```bash
 ansible-playbook local.yml --ask-become-pass -l others
 ```
+
+## Reference
+- [A good read](https://wearenotch.com/speed-up-ansible-playbook-execution/#:~:text=The%20first%20time%20a%20playbook,due%20to%20Ansible's%20idempotence%20checking.)
