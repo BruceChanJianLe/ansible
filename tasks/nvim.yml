@@ -42,13 +42,13 @@
     - setup
     - nvim
 
-- name: Get Packer
-  ansible.builtin.git:
-    repo: 'https://github.com/wbthomason/packer.nvim'
-    dest: "{{ ansible_env.HOME }}/.local/share/nvim/site/pack/packer/start/packer.nvim"
-  tags:
-    - setup
-    - nvim
+# - name: Get Packer
+#   ansible.builtin.git:
+#     repo: 'https://github.com/wbthomason/packer.nvim'
+#     dest: "{{ ansible_env.HOME }}/.local/share/nvim/site/pack/packer/start/packer.nvim"
+#   tags:
+#     - setup
+#     - nvim
 
 - name: Clone nvim
   ansible.builtin.git:
@@ -66,7 +66,8 @@
 
 - name: Install nvim plugins
   become: no
-  shell: nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+  shell: nvim --headless -c 'autocmd User LazySync quitall' -c 'Lazy sync'
+  # shell: nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
   # https://github.com/wbthomason/packer.nvim/issues/502
   tags:
     - setup
