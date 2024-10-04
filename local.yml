@@ -13,7 +13,7 @@
   - name: Update Apt
     become: true
     apt:
-      upgrade: yes
+      upgrade: no
       force_apt_get: true
       update_cache: true
       cache_valid_time: 86400 #One day
@@ -22,11 +22,12 @@
       - setup
 
   tasks:
-    - include: tasks/core.yml
-    - include: tasks/ssh.yml
-    - include: tasks/base16.yml
-    - include: tasks/nvim.yml
-    - include: tasks/tmux.yml
-    - include: tasks/zsh.yml
-    - include: tasks/dotfiles.yml
-    - include: tasks/p-aliases.yml
+    - include_tasks: tasks/core.yml
+    - include_tasks: tasks/ssh.yml
+    - include_tasks: tasks/base16.yml
+    - include_tasks: tasks/nvim.yml
+    - include_tasks: tasks/tmux.yml
+    - include_tasks: tasks/zsh.yml
+    - include_tasks: tasks/dotfiles.yml
+    - include_tasks: tasks/p-aliases.yml
+    - include_tasks: tasks/brave.yml
