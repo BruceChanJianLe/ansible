@@ -1,0 +1,52 @@
+- name: Install dependencies for setting up sources
+  become: yes
+  apt:
+    name: "{{ packages }}"
+    update_cache: yes
+  vars:
+    packages:
+    - curl
+  tags:
+  - setup
+  - brave
+
+# sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+- name: Setup Brave Browser keys
+  become: yes
+  ansible.builtin.get_url:
+    url: https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+    dest: /usr/share/keyrings/brave-browser-archive-keyring.gpg
+  tags:
+  - setup
+  - brave
+
+# echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+# echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"|sudo tee /etc/apt/sources.list.d/brave-browser-release.list
+- name: Setup Brave Browser sources
+  become: yes
+  apt_repository:
+    repo: "deb [arch={{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }} signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"
+    state: present
+    filename: brave-browser-release
+  tags:
+  - setup
+  - brave
+
+- name: Update Apt
+  become: true
+  apt:
+    upgrade: yes
+    force_apt_get: true
+    update_cache: true
+    state: present
+  tags:
+  - setup
+  - brave
+
+- name: Install Brave Browser
+  become: yes
+  apt:
+    name: brave-browser
+  tags:
+  - setup
+  - brave
