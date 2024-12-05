@@ -1,7 +1,7 @@
 - name: Make backup .bashrc
   ansible.builtin.copy:
     src: "{{ ansible_env.HOME }}/.bashrc"
-    dest: "{{ ansible_env.HOME }}/.ori.bashrc"
+    dest: "{{ ansible_env.HOME }}/.bashrc.ori"
     mode: 0664
     decrypt: false
   tags:
@@ -19,7 +19,7 @@
 - name: Make backup .bash_aliases
   ansible.builtin.copy:
     src: "{{ ansible_env.HOME }}/.bash_aliases"
-    dest: "{{ ansible_env.HOME }}/.ori.bash_aliases"
+    dest: "{{ ansible_env.HOME }}/.bash_aliases.ori"
     mode: 0664
     decrypt: false
   when: bal.stat.exists
