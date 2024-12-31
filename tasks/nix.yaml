@@ -1,7 +1,8 @@
-- name: Ensure nix not already installed
-  ansible.builtin.stat:
-    path: /nix/store
-  register: nix_store_status
+- name: Check if Nix is installed
+  ansible.builtin.command: which nix
+  register: nix_installed
+  changed_when: false
+  ignore_errors: true
   tags:
     - setup
     - nix
@@ -11,7 +12,7 @@
     url: https://nixos.org/nix/install
     dest: /tmp/nix-install.sh
     mode: '0755'
-  when: not nix_store_status.stat.exists
+  when: nix_installed.rc != 0
   tags:
     - setup
     - nix
@@ -25,7 +26,7 @@
       "I don't support your init system yet; you may want to add nix-daemon manually.": ""
   become: yes
   timeout: 600
-  when: not nix_store_status.stat.exists
+  when: nix_installed.rc != 0
   tags:
     - setup
     - nix
@@ -34,7 +35,7 @@
   ansible.builtin.file:
     path: /tmp/nix-install.sh
     state: absent
-  when: not nix_store_status.stat.exists
+  when: nix_installed.rc != 0
   tags:
     - setup
     - nix
@@ -44,7 +45,7 @@
     path: "{{ ansible_env.HOME }}/.config/nix"
     state: directory
     mode: '0755'
-  when: not nix_store_status.stat.exists
+  when: nix_installed.rc != 0
   tags:
     - setup
     - nix
@@ -55,7 +56,7 @@
     content: |
       experimental-features = nix-command flakes
     mode: '0644' 
-  when: not nix_store_status.stat.exists
+  when: nix_installed.rc != 0
   tags:
     - setup
     - nix
