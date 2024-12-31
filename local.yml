@@ -31,3 +31,5 @@
     - include_tasks: tasks/dotfiles.yml
     - include_tasks: tasks/p-aliases.yml
     - include_tasks: tasks/brave.yml
+    - include_tasks: tasks/nix.yml
+    # - include_tasks: tasks/ghostty.yml

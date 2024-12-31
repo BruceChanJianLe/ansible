@@ -1,0 +1,61 @@
+- name: Ensure nix not already installed
+  ansible.builtin.stat:
+    path: /nix/store
+  register: nix_store_status
+  tags:
+    - setup
+    - nix
+
+- name: Download Nix installer
+  ansible.builtin.get_url:
+    url: https://nixos.org/nix/install
+    dest: /tmp/nix-install.sh
+    mode: '0755'
+  when: not nix_store_status.stat.exists
+  tags:
+    - setup
+    - nix
+
+- name: Run Nix installer interactively
+  ansible.builtin.expect:
+    command: "bash /tmp/nix-install.sh --daemon"
+    responses:
+      "\\[y/n\\]": "y"
+      "Nix won't work in active shell sessions until you restart them.": ""
+      "I don't support your init system yet; you may want to add nix-daemon manually.": ""
+  become: yes
+  timeout: 600
+  when: not nix_store_status.stat.exists
+  tags:
+    - setup
+    - nix
+
+- name: Remove Nix installer script
+  ansible.builtin.file:
+    path: /tmp/nix-install.sh
+    state: absent
+  when: not nix_store_status.stat.exists
+  tags:
+    - setup
+    - nix
+
+- name: Ensure ~/.config/nix directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.config/nix"
+    state: directory
+    mode: '0755'
+  when: not nix_store_status.stat.exists
+  tags:
+    - setup
+    - nix
+
+- name: Create nix.conf with experimental features enabled
+  ansible.builtin.copy:
+    dest: "{{ ansible_env.HOME }}/.config/nix/nix.conf"
+    content: |
+      experimental-features = nix-command flakes
+    mode: '0644' 
+  when: not nix_store_status.stat.exists
+  tags:
+    - setup
+    - nix
