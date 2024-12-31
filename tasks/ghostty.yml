@@ -1,10 +1,10 @@
-- name: Check ghostty repo exist
-  ansible.builtin.stat:
-    path: "{{ ansible_env.HOME }}/reference/ghostty.git"
-  register: ghostty_repo
-  tags:
-  - setup
-  - ghostty
+# - name: Check ghostty repo exist
+#   ansible.builtin.stat:
+#     path: "{{ ansible_env.HOME }}/reference/ghostty.git"
+#   register: ghostty_repo
+#   tags:
+#   - setup
+#   - ghostty
 
 - name: Cloning ghostty
   ansible.builtin.git:
@@ -46,15 +46,16 @@
   args:
     chdir: "{{ ansible_env.HOME }}/reference/ghostty.git"
   become: no
-  creates: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0" 
   tags:
     - setup
     - ghostty
 
 - name: Build Ghostty with Nix
   ansible.builtin.shell: |
-    nix develop --command $SHELL -c "which zig | xargs -I {} sudo {} build -p /usr/local -Doptimize=ReleaseFast"
-  become: yes  # Use 'become: yes' if sudo is needed
+    nix develop --command $(which zsh) -c "which zig | xargs -I {} sudo {} build -p /usr/local -Doptimize=ReleaseFast"
+  args:
+    chdir: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0"
+  become: no
   tags:
     - setup
     - ghostty
