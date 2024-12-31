@@ -1,0 +1,60 @@
+- name: Check ghostty repo exist
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/reference/ghostty.git"
+  register: ghostty_repo
+  tags:
+  - setup
+  - ghostty
+
+- name: Cloning ghostty
+  ansible.builtin.git:
+    repo: 'https://github.com/ghostty-org/ghostty.git'
+    dest: "{{ ansible_env.HOME }}/reference/ghostty.git"
+    recursive: yes
+    update: yes
+    accept_hostkey: yes
+    version: master
+    bare: true
+  when: ghostty_repo.stat.exists
+  tags:
+    - setup
+    - ghostty
+
+- name: Configure remote for correct fetch behavior
+  ansible.builtin.shell: |
+    git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+  args:
+    chdir: "{{ ansible_env.HOME }}/reference/ghostty.git"
+  become: no
+  tags:
+    - setup
+    - ghostty
+
+- name: Perform a git fetch
+  ansible.builtin.shell: |
+    git fetch
+  args:
+    chdir: "{{ ansible_env.HOME }}/reference/ghostty.git"
+  become: no
+  tags:
+    - setup
+    - ghostty
+
+- name: Create v1.0.0 Git worktree
+  ansible.builtin.shell: |
+    git worktree add v1.0.0 v1.0.0
+  args:
+    chdir: "{{ ansible_env.HOME }}/reference/ghostty.git"
+  become: no
+  creates: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0" 
+  tags:
+    - setup
+    - ghostty
+
+- name: Build Ghostty with Nix
+  ansible.builtin.shell: |
+    nix develop --command $SHELL -c "which zig | xargs -I {} sudo {} build -p /usr/local -Doptimize=ReleaseFast"
+  become: yes  # Use 'become: yes' if sudo is needed
+  tags:
+    - setup
+    - ghostty
