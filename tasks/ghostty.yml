@@ -53,7 +53,7 @@
 - name: Build Ghostty with Nix
   ansible.builtin.shell: |
     . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-    nix develop --accept-flake-config false --command $(which zsh) -c "which zig | xargs -I {} sudo {} build -p /usr/local -Doptimize=ReleaseFast"
+    nix develop --accept-flake-config --command $(which zsh) -c "which zig | xargs -I {} sudo {} build -p /usr/local -Doptimize=ReleaseFast"
   args:
     chdir: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0"
   become: no
