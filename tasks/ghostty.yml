@@ -42,10 +42,10 @@
     - ghostty
 
 - name: Build Ghostty with Nix
-  ansible.builtin.expect:
-    command: . /etc/profile.d/nix.sh && nix develop --command $(which zsh) -c "which zig | xargs -I {} sudo {} build -p /usr/local -Doptimize=ReleaseFast"
-    responses:
-      ".*(y/N)?": ""
+  ansible.builtin.shell: |
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+    nix develop --command $(which zsh) -c "which zig | xargs -I {} sudo {} build -p /usr/local -Doptimize=ReleaseFast"
+  args:
     chdir: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0"
   become: no
   tags:
