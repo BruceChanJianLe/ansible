@@ -23,13 +23,24 @@
 
   tasks:
     - include_tasks: tasks/core.yml
+      tags: core
     - include_tasks: tasks/ssh.yml
+      tags: [dotfiles, ssh]
     - include_tasks: tasks/base16.yml
+      tags: base16
     - include_tasks: tasks/nvim.yml
+      tags: nvim
     - include_tasks: tasks/tmux.yml
+      tags: tmux
     - include_tasks: tasks/zsh.yml
+      tags: zsh
     - include_tasks: tasks/dotfiles.yml
+      tags: dotfiles
     - include_tasks: tasks/p-aliases.yml
+      tags: private_aliases
     - include_tasks: tasks/brave.yml
+      tags: brave
     - include_tasks: tasks/nix.yml
+      tags: nix
     - include_tasks: tasks/ghostty.yml
+      tags: ghostty

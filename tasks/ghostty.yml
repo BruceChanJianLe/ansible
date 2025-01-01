@@ -40,11 +40,17 @@
     - setup
     - ghostty
 
+- name: Check if tag v1.0.0 directory exists
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0"
+  register: dir_stat
+
 - name: Create v1.0.0 Git worktree
   ansible.builtin.shell: |
     git worktree add v1.0.0 v1.0.0
   args:
     chdir: "{{ ansible_env.HOME }}/reference/ghostty.git"
+  when: not dir_stat.stat.exists
   become: no
   tags:
     - setup
