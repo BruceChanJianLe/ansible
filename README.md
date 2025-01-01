@@ -9,6 +9,8 @@ tags:
   - dotfiles
   - private_aliases
   - brave
+  - nix
+  - ghostty
 
 Install dependencies (ansible, git)
 ```bash
