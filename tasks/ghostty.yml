@@ -43,7 +43,7 @@
 
 - name: Build Ghostty with Nix
   ansible.builtin.shell: |
-    nix develop --command $(which zsh) -c "which zig | xargs -I {} sudo {} build -p /usr/local -Doptimize=ReleaseFast"
+    . /etc/profile.d/nix.sh && nix develop --command $(which zsh) -c "which zig | xargs -I {} sudo {} build -p /usr/local -Doptimize=ReleaseFast"
   args:
     chdir: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0"
   become: no
