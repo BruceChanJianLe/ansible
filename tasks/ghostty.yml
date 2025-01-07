@@ -44,6 +44,9 @@
   ansible.builtin.stat:
     path: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0"
   register: dir_stat
+  tags:
+    - setup
+    - ghostty
 
 - name: Create v1.0.0 Git worktree
   ansible.builtin.shell: |
