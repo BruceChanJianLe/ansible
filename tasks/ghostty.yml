@@ -9,6 +9,7 @@
   tags:
     - setup
     - ghostty
+    - additional
 
 - name: Cloning ghostty
   ansible.builtin.git:
@@ -22,6 +23,7 @@
   tags:
     - setup
     - ghostty
+    - additional
 
 - name: Configure remote for correct fetch behavior
   ansible.builtin.shell: |
@@ -32,6 +34,7 @@
   tags:
     - setup
     - ghostty
+    - additional
 
 - name: Perform a git fetch
   ansible.builtin.shell: |
@@ -42,6 +45,7 @@
   tags:
     - setup
     - ghostty
+    - additional
 
 - name: Check if tag v1.0.0 directory exists
   ansible.builtin.stat:
@@ -50,6 +54,7 @@
   tags:
     - setup
     - ghostty
+    - additional
 
 - name: Create v1.0.0 Git worktree
   ansible.builtin.shell: |
@@ -61,6 +66,7 @@
   tags:
     - setup
     - ghostty
+    - additional
 
 - name: Build Ghostty with Nix
   ansible.builtin.shell: |
@@ -72,3 +78,4 @@
   tags:
     - setup
     - ghostty
+    - additional

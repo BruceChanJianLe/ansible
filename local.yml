@@ -39,8 +39,8 @@
     - include_tasks: tasks/p-aliases.yml
       tags: private_aliases
     - include_tasks: tasks/brave.yml
-      tags: brave
+      tags: [brave, additional]
     - include_tasks: tasks/nix.yml
-      tags: nix
+      tags: [nix, additional]
     - include_tasks: tasks/ghostty.yml
-      tags: ghostty
+      tags: [ghostty, additional]

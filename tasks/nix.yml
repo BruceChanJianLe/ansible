@@ -6,6 +6,7 @@
   tags:
     - setup
     - nix
+    - additional
 
 - name: Download Nix installer
   ansible.builtin.get_url:
@@ -16,6 +17,7 @@
   tags:
     - setup
     - nix
+    - additional
 
 - name: Run Nix installer interactively
   ansible.builtin.expect:
@@ -30,6 +32,7 @@
   tags:
     - setup
     - nix
+    - additional
 
 - name: Remove Nix installer script
   ansible.builtin.file:
@@ -39,3 +42,4 @@
   tags:
     - setup
     - nix
+    - additional
