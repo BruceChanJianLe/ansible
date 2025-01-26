@@ -11,6 +11,7 @@ tags:
   - brave
   - nix
   - ghostty
+  - additional (not meant for containers)
 
 Install dependencies (ansible, git)
 ```bash
@@ -19,10 +20,14 @@ sudo apt install ansible git -y
 
 Setting up new laptop
 ```bash
-# Full Setup
-ANSIBLE_ASK_VAULT_PASS=True ansible-pull -U https://github.com/brucechanjianle/ansible --ask-vault-pass -e "enable_decryption=true dotfile_branch=master" --ask-become-pass -C experimental
+# Full Setup without decryption (For anyone who wants to try)
+ansible-pull -U https://github.com/brucechanjianle/ansible --ask-become-pass -C experimental
+
+# Full Setup with decryption
+ANSIBLE_ASK_VAULT_PASS=True ansible-pull -U https://github.com/brucechanjianle/ansible --ask-vault-pass -e "enable_decryption=true" --ask-become-pass -C experimental
+
 # Partial Setup, works for docker as well
-ansible-pull -U https://github.com/brucechanjianle/ansible --skip-tags brave --ask-become-pass
+ansible-pull -U https://github.com/brucechanjianle/ansible --skip-tags additional --ask-become-pass
 ```
 
 Setting up for a specific group of users defined in inventory file
