@@ -21,12 +21,12 @@ sudo apt install ansible git -y
 Setting up new laptop
 ```bash
 # Full Setup without decryption (For anyone who wants to try)
-ansible-pull -U https://github.com/brucechanjianle/ansible --ask-become-pass -C experimental
+ansible-pull -U https://github.com/brucechanjianle/ansible --ask-become-pass
 
 # Full Setup with decryption
-ANSIBLE_ASK_VAULT_PASS=True ansible-pull -U https://github.com/brucechanjianle/ansible --ask-vault-pass -e "enable_decryption=true" --ask-become-pass -C experimental
+ANSIBLE_ASK_VAULT_PASS=True ansible-pull -U https://github.com/brucechanjianle/ansible --ask-vault-pass -e "enable_decryption=true" --ask-become-pass
 
-# Partial Setup, works for docker as well
+# Partial Setup, works for docker/podman as well
 ansible-pull -U https://github.com/brucechanjianle/ansible --skip-tags additional --ask-become-pass
 ```
 
