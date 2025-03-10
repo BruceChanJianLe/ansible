@@ -1,3 +1,7 @@
+This script is a quick way to setup your brand new laptop,
+or your docker containers in a swift manner. It currently supports
+Ubuntu and Arch!
+
 tags:
   - setup (all)
   - core
@@ -37,3 +41,4 @@ ansible-playbook local.yml --ask-become-pass -l others
 
 ## Reference
 - [A good read](https://wearenotch.com/speed-up-ansible-playbook-execution/#:~:text=The%20first%20time%20a%20playbook,due%20to%20Ansible's%20idempotence%20checking.)
+- [ansible_os_family var](https://groups.google.com/g/ansible-project/c/OZPu-b17n_w)
