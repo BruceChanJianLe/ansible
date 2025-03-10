@@ -8,6 +8,7 @@
     enable_decryption: false
     ripgrep_version: 14.0.3
     fd_version: 8.7.1
+    linux_distro: "{{ ansible_family_os }}"
 
   pre_tasks:
   - name: Update Apt
@@ -18,29 +19,19 @@
       update_cache: true
       cache_valid_time: 86400 #One day
       state: present
-    tags:
-      - setup
+    when: ansible_os_family == "Debian"
+
+  - name: Update Package Manager
+    become: true
+    pacman:
+      update_cache: true
+      state: present
+    when: ansible_os_family == "Archlinux"
 
   tasks:
-    - include_tasks: tasks/core.yml
-      tags: core
-    - include_tasks: tasks/ssh.yml
-      tags: [dotfiles, ssh]
-    - include_tasks: tasks/base16.yml
-      tags: base16
-    - include_tasks: tasks/nvim.yml
-      tags: nvim
-    - include_tasks: tasks/tmux.yml
-      tags: tmux
-    - include_tasks: tasks/zsh.yml
-      tags: zsh
-    - include_tasks: tasks/dotfiles.yml
-      tags: dotfiles
-    - include_tasks: tasks/p-aliases.yml
-      tags: private_aliases
-    - include_tasks: tasks/brave.yml
-      tags: [brave, additional]
-    - include_tasks: tasks/nix.yml
-      tags: [nix, additional]
-    - include_tasks: tasks/ghostty.yml
-      tags: [ghostty, additional]
+    - include_tasks: setup-Debian.yml
+      when: ansible_os_family == 'Debian'
+      tags: [setup, core, ssh, base16, nvim, tmux, zsh, dotfiles, private_aliases, brave, nix, ghostty, additional]
+    - include_tasks: setup-Archlinux.yml
+      when: ansible_os_family == "Archlinux"
+      tags: [setup, core, ssh, base16, nvim, tmux, zsh, dotfiles, private_aliases, brave, nix, ghostty, additional, yay]
