@@ -1,0 +1,30 @@
+- name: Install ripgrep
+  become: yes
+  ansible.builtin.pacman:
+    name: ripgrep
+  tags:
+    - setup
+    - nvim
+
+- name: Install fd
+  become: yes
+  ansible.builtin.pacman:
+    name: fd
+  tags:
+    - setup
+    - nvim
+
+- name: Clone nvim
+  ansible.builtin.git:
+    repo: 'https://github.com/brucechanjianle/nvim.git'
+    dest: "{{ ansible_env.HOME }}/.config/nvim"
+  tags:
+    - setup
+    - nvim
+
+- name: Install nvim plugins
+  become: no
+  shell: nvim --headless -c 'autocmd User LazySync quitall' -c 'Lazy sync'
+  tags:
+    - setup
+    - nvim
