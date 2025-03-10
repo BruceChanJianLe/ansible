@@ -1,0 +1,8 @@
+- name: Install ghostty
+  become: yes
+  ansible.builtin.pacman:
+    name: ghostty
+  tags:
+    - setup
+    - ghostty
+    - additional
