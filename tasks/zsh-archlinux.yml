@@ -1,0 +1,162 @@
+- name: Clone zsh
+  ansible.builtin.git:
+    repo: 'https://github.com/brucechanjianle/zsh.git'
+    dest: "{{ ansible_env.HOME }}/.config/zsh"
+    version: "{{ dotfile_branch }}"
+  tags:
+    - setup
+    - zsh
+
+- name: Install zsh
+  become: yes
+  ansible.builtin.pacman:
+    name: zsh
+  tags:
+    - setup
+    - zsh
+
+- name: Install zsh dependencies
+  become: yes
+  ansible.builtin.pacman:
+    name:
+      - zsh-syntax-highlighting
+      - fzf
+  tags:
+    - setup
+    - zsh
+
+- name: Get the path of zsh
+  ansible.builtin.command: which zsh
+  register: zsh_path
+  changed_when: false
+  tags:
+    - setup
+    - zsh
+
+- name: Change shell to zsh for a user
+  become: yes
+  ansible.builtin.user:
+    name: "{{ ansible_env.USER }}"
+    shell: "{{ zsh_path.stdout }}"
+  tags:
+    - setup
+    - zsh
+
+# zsh history
+- name: Create zsh cache directory if it doesn't exist
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.cache/zsh"
+    state: directory
+    mode: '0755'
+  tags:
+    - setup
+    - zsh
+
+- name: Ensure zsh history file exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.cache/zsh/history"
+    state: touch
+  tags:
+    - setup
+    - zsh
+
+# zap (minimal zsh plugin manager)
+- name: Define zap repository directory
+  ansible.builtin.set_fact:
+    zap_repo_dir: "{{ ansible_env.HOME }}/reference/zap.git"
+    zap_repo_master_branch_dir: "{{ ansible_env.HOME }}/reference/zap.git/master"
+  tags:
+    - setup
+    - zsh
+
+- name: Check if zap repository directory exists
+  ansible.builtin.stat:
+    path: "{{ zap_repo_dir }}"
+  register: zap_repo_stat
+  tags:
+    - setup
+    - zsh
+
+- name: Create reference directory
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/reference"
+    state: directory
+  tags:
+    - setup
+    - zsh
+
+- name: Clone zap repository
+  ansible.builtin.git:
+    repo: "https://github.com/zap-zsh/zap.git"
+    dest: "{{ zap_repo_dir }}"
+    bare: yes
+    update: no
+  when: not zap_repo_stat.stat.exists
+  tags:
+    - setup
+    - zsh
+
+- name: Configure git remote fetch
+  ansible.builtin.command:
+    cmd: git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+    chdir: "{{ zap_repo_dir }}"
+  when: zap_repo_stat.stat.exists
+  tags:
+    - setup
+    - zsh
+
+- name: Fetch latest changes
+  ansible.builtin.command:
+    cmd: git fetch
+    chdir: "{{ zap_repo_dir }}"
+  when: zap_repo_stat.stat.exists
+  tags:
+    - setup
+    - zsh
+
+- name: Check if zap master branch directory exists
+  ansible.builtin.stat:
+    path: "{{ zap_repo_master_branch_dir }}"
+  register: zap_repo_master_branch_stat
+  tags:
+    - setup
+    - zsh
+
+    # Ensure master branch exists and is up to date
+- name: Checkout and update master branch
+  ansible.builtin.command:
+    cmd: git worktree add master master
+    chdir: "{{ zap_repo_dir }}"
+  when: not zap_repo_master_branch_stat.stat.exists
+  tags:
+    - setup
+    - zsh
+
+- name: Pull latest changes for master branch
+  ansible.builtin.command:
+    cmd: git pull origin master
+    chdir: "{{ zap_repo_dir }}/master"
+  when: zap_repo_master_branch_stat.stat.exists
+  tags:
+    - setup
+    - zsh
+
+- name: Check if zap is installed
+  ansible.builtin.command: which zap
+  register: zap_installed
+  ignore_errors: yes
+  tags:
+    - setup
+    - zsh
+
+- name: Install zap
+  ansible.builtin.shell:
+    cmd: if ! command -v zap &> /dev/null; then
+          ./install.zsh --branch release-v1 --keep
+         fi
+    chdir: "{{ zap_repo_dir }}/master"
+  when: zap_repo_stat.stat.exists && zap_installed.rc != 0
+  ignore_errors: yes
+  tags:
+    - setup
+    - zsh
