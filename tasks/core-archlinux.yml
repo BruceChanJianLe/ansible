@@ -1,0 +1,25 @@
+# Core packages
+- name: Install developer packages
+  become: yes
+  ansible.builtin.pacman:
+    name:
+      - base-devel
+      - cmake
+      - cppcheck
+      - gdb
+      - git
+      - openssh
+      - google-glog
+      - libspnav
+      - libusb
+      - lsb-release
+      - wget
+      - net-tools
+      - curl
+      - bc
+      - ansible
+      # - ncurses-term 
+      # - ssh-import-id
+      # - software-properties-common
+  tags:
+    - core
