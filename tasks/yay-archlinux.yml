@@ -1,0 +1,103 @@
+- name: Ensure base-devel package group is installed (required for building yay)
+  ansible.builtin.pacman:
+    name:
+      - base-devel
+      - git
+    state: present
+  tags:
+    - setup
+    - yay
+
+# yay (Yet Another Yaourt), AUR (Arch User Repository)
+- name: Define yay repository directory
+  ansible.builtin.set_fact:
+    yay_repo_dir: "{{ ansible_env.HOME }}/reference/yay.git"
+    yay_repo_master_branch_dir: "{{ ansible_env.HOME }}/reference/yay.git/master"
+  tags:
+    - setup
+    - yay
+
+- name: Check if yay repository directory exists
+  ansible.builtin.stat:
+    path: "{{ yay_repo_dir }}"
+  register: yay_repo_stat
+  tags:
+    - setup
+    - yay
+
+- name: Create reference directory
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/reference"
+    state: directory
+  when: not zap_repo_stat.stat.exists
+  tags:
+    - setup
+    - yay
+
+- name: Clone zap repository
+  ansible.builtin.git:
+    repo: "https://github.com/zap-yay/zap.git"
+    dest: "{{ zap_repo_dir }}"
+    bare: yes
+    update: no
+  when: not zap_repo_stat.stat.exists
+  tags:
+    - setup
+    - yay
+
+- name: Configure git remote fetch
+  ansible.builtin.command:
+    cmd: git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+    chdir: "{{ zap_repo_dir }}"
+  when: zap_repo_stat.stat.exists
+  tags:
+    - setup
+    - yay
+
+- name: Fetch latest changes
+  ansible.builtin.command:
+    cmd: git fetch
+    chdir: "{{ zap_repo_dir }}"
+  when: zap_repo_stat.stat.exists
+  tags:
+    - setup
+    - yay
+
+- name: Check if zap master branch directory exists
+  ansible.builtin.stat:
+    path: "{{ zap_repo_master_branch_dir }}"
+  register: zap_repo_master_branch_stat
+  tags:
+    - setup
+    - yay
+
+    # Ensure master branch exists and is up to date
+- name: Checkout and update master branch
+  ansible.builtin.command:
+    cmd: git worktree add master master
+    chdir: "{{ zap_repo_dir }}"
+  when: not zap_repo_master_branch_stat.stat.exists
+  tags:
+    - setup
+    - yay
+
+- name: Pull latest changes for master branch
+  ansible.builtin.command:
+    cmd: git pull origin master
+    chdir: "{{ zap_repo_dir }}/master"
+  when: zap_repo_master_branch_stat.stat.exists
+  tags:
+    - setup
+    - yay
+
+- name: Install yay from the AUR
+  ansible.builtin.shell:
+    cmd: |
+      if ! command -v yay &> /dev/null; then
+        git clone --bare https://aur.archlinux.org/yay.git ~/reference/yay.git && cd ~/reference/yay.git && git worktree add master master && cd master
+        makepkg -si --noconfirm
+      fi
+    creates: /usr/bin/yay
+  tags:
+    - setup
+    - yay
