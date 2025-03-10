@@ -1,0 +1,25 @@
+---
+- include_tasks: tasks/core-archlinux.yml
+  tags: core
+- include_tasks: tasks/ssh.yml
+  tags: [dotfiles, ssh]
+- include_tasks: tasks/base16.yml
+  tags: base16
+- include_tasks: tasks/nvim-archlinux.yml
+  tags: nvim
+- include_tasks: tasks/tmux-archlinux.yml
+  tags: tmux
+- include_tasks: tasks/zsh-archlinux.yml
+  tags: zsh
+- include_tasks: tasks/dotfiles.yml
+  tags: dotfiles
+- include_tasks: tasks/p-aliases.yml
+  tags: private_aliases
+- include_tasks: tasks/yay-archlinux.yml
+  tags: yay
+# - include_tasks: tasks/brave.yml
+#   tags: [brave, additional]
+# - include_tasks: tasks/nix.yml
+#   tags: [nix, additional]
+- include_tasks: tasks/ghostty-archlinux.yml
+  tags: [ghostty, additional]
