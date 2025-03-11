@@ -136,7 +136,7 @@
 - name: Pull latest changes for master branch
   ansible.builtin.command:
     cmd: git pull origin master
-    chdir: "{{ zap_repo_dir }}/master"
+    chdir: "{{ zap_repo_master_branch_dir }}"
   when: zap_repo_master_branch_stat.stat.exists
   tags:
     - setup
