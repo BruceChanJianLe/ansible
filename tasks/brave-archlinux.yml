@@ -1,0 +1,8 @@
+- name: Install Brave Browser
+  become: yes
+  ansible.builtin.shell:
+    cmd: paru -Sy brave-bin
+  tags:
+  - setup
+  - brave
+  - additional
