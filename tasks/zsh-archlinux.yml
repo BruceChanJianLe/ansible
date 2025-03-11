@@ -65,6 +65,7 @@
   ansible.builtin.set_fact:
     zap_repo_dir: "{{ ansible_env.HOME }}/reference/zap.git"
     zap_repo_master_branch_dir: "{{ ansible_env.HOME }}/reference/zap.git/master"
+    zap_installed_dir: "{{ ansible_env.HOME }}/.local/share/zap"
   tags:
     - setup
     - zsh
@@ -122,8 +123,8 @@
     - setup
     - zsh
 
-    # Ensure master branch exists and is up to date
-- name: Checkout and update master branch
+# Ensure master branch exists and is up to date
+- name: Checkout to master branch
   ansible.builtin.command:
     cmd: git worktree add master master
     chdir: "{{ zap_repo_dir }}"
@@ -141,22 +142,20 @@
     - setup
     - zsh
 
-- name: Check if zap is installed
-  ansible.builtin.command: which zap
-  register: zap_installed
-  ignore_errors: yes
+- name: Check if zap installation exist
+  ansible.builtin.stat:
+    path: "{{ zap_installed_dir }}"
+  register: zap_installed_dir_stat
   tags:
     - setup
     - zsh
 
 - name: Install zap
   ansible.builtin.shell:
-    cmd: if ! command -v zap &> /dev/null; then
-          ./install.zsh --branch release-v1 --keep
-         fi
+    cmd: ./install.zsh --branch release-v1 --keep
     chdir: "{{ zap_repo_dir }}/master"
-  when: zap_repo_stat.stat.exists && zap_installed.rc != 0
-  ignore_errors: yes
+  when: zap_repo_stat.stat.exists && not zap_installed_dir_stat.stat.exists
+  ignore_errors: true
   tags:
     - setup
     - zsh
