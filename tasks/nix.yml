@@ -1,5 +1,5 @@
 - name: Check if Nix is installed
-  ansible.builtin.command: which nix
+  command: which nix
   register: nix_installed
   ignore_errors: true
   tags:
