@@ -1,15 +1,12 @@
-- name: Install ripgrep
+- name: Install neovim dependencies
   become: yes
   ansible.builtin.pacman:
-    name: ripgrep
-  tags:
-    - setup
-    - nvim
-
-- name: Install fd
-  become: yes
-  ansible.builtin.pacman:
-    name: fd
+    name:
+      - ripgrep
+      - fd
+      - luarocks
+      - imagemagick
+      - python-virtualenv
   tags:
     - setup
     - nvim
