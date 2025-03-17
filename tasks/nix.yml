@@ -26,8 +26,8 @@
       "\\[y/n\\]": "y"
       "Nix won't work in active shell sessions until you restart them.": ""
       "I don't support your init system yet; you may want to add nix-daemon manually.": ""
+    timeout: 600
   become: yes
-  timeout: 600
   when: nix_installed.rc != 0
   tags:
     - setup
