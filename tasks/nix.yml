@@ -1,6 +1,7 @@
 - name: Check if Nix is installed
   command: which nix
   register: nix_installed
+  changed_when: false
   ignore_errors: true
   tags:
     - setup
