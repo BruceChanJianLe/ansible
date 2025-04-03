@@ -67,6 +67,10 @@
     key: "{{ ansible_env.HOME }}/.ssh/id_cjl.pub"
   with_fileglob:
   - "{{ ansible_env.HOME }}/.ssh/cjl.pub"
+  tags:
+  - ssh
+  - dotfiles
+  - setup
 
 - name: Enable and start sshd service
   become: yes
@@ -74,3 +78,8 @@
     name: sshd
     enabled: yes
     state: started
+  ignore_errors: true
+  tags:
+  - ssh
+  - dotfiles
+  - setup
