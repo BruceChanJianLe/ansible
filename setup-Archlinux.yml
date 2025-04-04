@@ -15,13 +15,3 @@
   tags: dotfiles
 - include_tasks: tasks/p-aliases.yml
   tags: private_aliases
-# Use paru instead, and please compile it from source
-# link: https://github.com/Morganamilo/paru
-# - include_tasks: tasks/yay-archlinux.yml
-#   tags: yay
-# - include_tasks: tasks/brave-archlinux.yml
-#   tags: [brave, additional]
-- include_tasks: tasks/nix.yml
-  tags: [nix, additional]
-- include_tasks: tasks/ghostty-archlinux.yml
-  tags: [ghostty, additional]
