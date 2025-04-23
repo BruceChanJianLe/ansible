@@ -7,7 +7,6 @@
     - setup
     - zsh
 
-
 - name: Install zsh
   shell: "{{ ansible_env.HOME }}/.config/zsh/install_zsh.bash -a true"
   tags:

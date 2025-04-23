@@ -1,3 +1,34 @@
+- name: Check if ghostty directory is empty
+  find:
+    paths: "{{ ansible_env.HOME }}/.config/ghostty"
+    file_type: any
+  register: ghostty_contents
+  tags:
+    - setup
+    - ghostty
+    - additional
+
+- name: Clone repository if directory is empty
+  git:
+    repo: 'https://github.com/brucechanjianle/ghostty.git'
+    dest: "{{ ansible_env.HOME }}/.config/ghostty"
+    force: yes
+  when: ghostty_contents.matched == 0
+  tags:
+    - setup
+    - ghostty
+    - additional
+
+- name: Clone ghosty
+  ansible.builtin.git:
+    repo: 'https://github.com/brucechanjianle/zsh.git'
+    dest: "{{ ansible_env.HOME }}/.config/zsh"
+    version: "{{ dotfile_branch }}"
+  tags:
+    - setup
+    - ghostty
+    - additional
+
 - name: Install required packages
   ansible.builtin.apt:
     name:

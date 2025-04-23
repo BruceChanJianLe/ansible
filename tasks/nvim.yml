@@ -19,7 +19,7 @@
 
 - name: Validate if ripgrep already exists
   apt:
-    name: ripgrep
+    name: "ripgrep"
     state: present
   check_mode: yes
   register: ripgrep_check
