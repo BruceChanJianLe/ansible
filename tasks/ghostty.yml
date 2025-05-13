@@ -19,16 +19,6 @@
     - ghostty
     - additional
 
-- name: Clone ghosty
-  ansible.builtin.git:
-    repo: 'https://github.com/brucechanjianle/zsh.git'
-    dest: "{{ ansible_env.HOME }}/.config/zsh"
-    version: "{{ dotfile_branch }}"
-  tags:
-    - setup
-    - ghostty
-    - additional
-
 - name: Install required packages
   ansible.builtin.apt:
     name:
