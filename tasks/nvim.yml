@@ -72,10 +72,21 @@
 #     - setup
 #     - nvim
 
-- name: Clone nvim
+- name: Check if nvim config directory is empty
+  find:
+    paths: "{{ ansible_env.HOME }}/.config/nvim"
+    file_type: any
+  register: nvim_contents
+  tags:
+    - setup
+    - nvim
+
+- name: Clone nvim config
   ansible.builtin.git:
     repo: 'https://github.com/brucechanjianle/nvim.git'
     dest: "{{ ansible_env.HOME }}/.config/nvim"
+    force: yes
+  when: nvim_contents.matched == 0
   tags:
     - setup
     - nvim
