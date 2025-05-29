@@ -39,6 +39,15 @@ Setting up for a specific group of users defined in inventory file
 ansible-playbook local.yml --ask-become-pass -l others
 ```
 
+Post-Installation (Optional)
+```bash
+# Set ghostty as your default terminal
+sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/local/bin/ghostty 100
+
+# Set nvim as your default editor
+sudo update-alternatives --install /usr/bin/editor editor /usr/local/bin/nvim 100
+```
+
 ## Reference
 - [A good read](https://wearenotch.com/speed-up-ansible-playbook-execution/#:~:text=The%20first%20time%20a%20playbook,due%20to%20Ansible's%20idempotence%20checking.)
 - [ansible_os_family var](https://groups.google.com/g/ansible-project/c/OZPu-b17n_w)
