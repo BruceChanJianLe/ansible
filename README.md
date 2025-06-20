@@ -48,6 +48,14 @@ sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emula
 sudo update-alternatives --install /usr/bin/editor editor /usr/local/bin/nvim 100
 ```
 
+## Others
+
+Extract your key
+```bash
+wget https://raw.githubusercontent.com/BruceChanJianLe/ansible/refs/heads/master/.ssh/id_bri
+chmod 600 id_bri
+```
+
 ## Reference
 - [A good read](https://wearenotch.com/speed-up-ansible-playbook-execution/#:~:text=The%20first%20time%20a%20playbook,due%20to%20Ansible's%20idempotence%20checking.)
 - [ansible_os_family var](https://groups.google.com/g/ansible-project/c/OZPu-b17n_w)
