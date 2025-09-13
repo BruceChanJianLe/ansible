@@ -1,7 +1,8 @@
-- name: Install neovim dependencies
+- name: Install neovim and dependencies
   become: yes
   ansible.builtin.pacman:
     name:
+      - neovim
       - ripgrep
       - fd
       - luarocks
