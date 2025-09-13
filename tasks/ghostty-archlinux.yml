@@ -6,3 +6,26 @@
     - setup
     - ghostty
     - additional
+
+# Clone ghostty config
+- name: Check if ghostty directory is empty
+  find:
+    paths: "{{ ansible_env.HOME }}/.config/ghostty"
+    file_type: any
+  register: ghostty_contents
+  tags:
+    - setup
+    - ghostty
+    - additional
+
+- name: Clone repository if directory is empty
+  git:
+    repo: 'https://github.com/brucechanjianle/ghostty.git'
+    dest: "{{ ansible_env.HOME }}/.config/ghostty"
+    force: yes
+  when: ghostty_contents.matched == 0
+  tags:
+    - setup
+    - ghostty
+    - additional
+
