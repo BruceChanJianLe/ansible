@@ -154,7 +154,7 @@
   ansible.builtin.shell:
     cmd: ./install.zsh --branch release-v1 --keep
     chdir: "{{ zap_repo_dir }}/master"
-  when: zap_repo_stat.stat.exists && not zap_installed_dir_stat.stat.exists
+  when: not zap_installed_dir_stat.stat.exists
   ignore_errors: true
   tags:
     - setup
