@@ -17,7 +17,7 @@ tags:
   - ghostty
   - additional (not meant for containers)
 
-# Install dependencies (ansible, git)
+# Install dependencies
 
 ## Ubuntu
 
@@ -35,7 +35,7 @@ sudo pacman -S ansible git --noconfirm
 
 ## Full Setup without decryption
 
-Full Setup without decryption (For anyone who wants to try)
+(For anyone who wants to try)
 
 ```bash
 ansible-pull -U https://github.com/brucechanjianle/ansible --ask-become-pass
@@ -43,7 +43,7 @@ ansible-pull -U https://github.com/brucechanjianle/ansible --ask-become-pass
 
 ## Full Setup with decryption
 
-Full Setup with decryption (For you know who you are:)
+(For you know who you are:)
 
 ```bash
 ANSIBLE_ASK_VAULT_PASS=True ansible-pull -U https://github.com/brucechanjianle/ansible --ask-vault-pass -e "enable_decryption=true" --ask-become-pass
