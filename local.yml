@@ -39,8 +39,8 @@
 
     - include_tasks: setup-Archlinux.yml
       when: ansible_os_family == "Archlinux"
-      tags: [setup, core, ssh, base16, nvim, tmux, zsh, dotfiles, private_aliases]
+      tags: [setup, core, ssh, base16, nvim, tmux, zsh, dotfiles, hyprland, private_aliases]
 
     - include_tasks: setup-additional-Archlinux.yml
       when: ansible_os_family == "Archlinux"
-      tags: [brave, nix, ghostty, additional, yay]
+      tags: [brave, nix, ghostty, spotify, additional, yay]
