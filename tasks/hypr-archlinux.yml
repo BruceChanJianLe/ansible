@@ -1,0 +1,26 @@
+# Assuming hyprland is selected during arch installation
+
+# - name: Install hyprland dependencies
+#   become: yes
+#   ansible.builtin.pacman:
+#     name: wayland
+#   tags:
+#     - hyprland
+
+# Clone hyprland config
+- name: Check if hypr directory is empty
+  find:
+    paths: "{{ ansible_env.HOME }}/.config/hypr"
+    file_type: any
+  register: hypr_contents
+  tags:
+    - hyprland
+
+- name: Clone hypr config repo if dir is empty
+  git:
+    repo: 'https://github.com/brucechanjianle/hypr.git'
+    dest: "{{ ansible_env.HOME }}/.config/hypr"
+    force: yes
+  when: hypr_contents.matched == 0
+  tags:
+    - hyprland

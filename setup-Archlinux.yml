@@ -13,5 +13,7 @@
   tags: zsh
 - include_tasks: tasks/dotfiles.yml
   tags: dotfiles
+- include_tasks: tasks/hypr-archlinux.yml
+  tags: hyprland
 - include_tasks: tasks/p-aliases.yml
   tags: private_aliases
