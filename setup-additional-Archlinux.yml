@@ -9,3 +9,5 @@
   tags: [nix, additional]
 - include_tasks: tasks/ghostty-archlinux.yml
   tags: [ghostty, additional]
+- include_tasks: tasks/spotify-archlinux.yml
+  tags: [spotify, additional]

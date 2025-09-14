@@ -1,0 +1,7 @@
+- name: Install Spotify
+  become: yes
+  ansible.builtin.pacman:
+    name: spotify-launcher
+  tags:
+    - spotify
+    - additional
