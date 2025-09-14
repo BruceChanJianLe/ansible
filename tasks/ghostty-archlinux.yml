@@ -18,7 +18,7 @@
     - ghostty
     - additional
 
-- name: Clone repository if directory is empty
+- name: Clone ghotty config repo if dir is empty
   git:
     repo: 'https://github.com/brucechanjianle/ghostty.git'
     dest: "{{ ansible_env.HOME }}/.config/ghostty"
@@ -28,4 +28,3 @@
     - setup
     - ghostty
     - additional
-
