@@ -9,6 +9,7 @@
     ripgrep_version: 14.0.3
     fd_version: 8.7.1
     linux_distro: "{{ ansible_family_os }}"
+    use_zsh: true
 
   pre_tasks:
   - name: Update Apt

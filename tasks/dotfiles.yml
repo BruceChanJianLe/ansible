@@ -51,3 +51,25 @@
   tags:
     - setup
     - dotfiles
+
+- name: Restore original .bashrc
+  ansible.builtin.copy:
+    src: "{{ ansible_env.HOME }}/.bashrc.ori"
+    dest: "{{ ansible_env.HOME }}/.bashrc"
+    mode: 0664
+    decrypt: false
+  when: "{{ use_zsh }}"
+  tags:
+  - setup
+  - dotfiles
+
+- name: Restore original .bash_aliases
+  ansible.builtin.copy:
+    src: "{{ ansible_env.HOME }}/.bash_aliases.ori"
+    dest: "{{ ansible_env.HOME }}/.bash_aliases"
+    mode: 0664
+    decrypt: false
+  when: "{{ use_zsh }}"
+  tags:
+  - setup
+  - dotfiles
