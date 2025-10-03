@@ -13,9 +13,28 @@
     - setup
     - zsh
 
-- name: Change shell to zsh
-  become: yes
-  shell: sudo chsh -s $(which zsh)
+# Channge to zsh from ghostty config
+# - name: Change shell to zsh
+#   become: yes
+#   shell: sudo chsh -s $(which zsh)
+#   tags:
+#     - setup
+#     - zsh
+
+# zsh history
+- name: Create zsh cache directory if it doesn't exist
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.cache/zsh"
+    state: directory
+    mode: '0755'
+  tags:
+    - setup
+    - zsh
+
+- name: Ensure zsh history file exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.cache/zsh/history"
+    state: touch
   tags:
     - setup
     - zsh
