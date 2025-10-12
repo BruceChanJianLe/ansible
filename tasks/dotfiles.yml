@@ -58,7 +58,7 @@
     dest: "{{ ansible_env.HOME }}/.bashrc"
     mode: 0664
     decrypt: false
-  when: "{{ use_zsh }}"
+  when: use_zsh
   tags:
   - setup
   - dotfiles
@@ -69,7 +69,7 @@
     dest: "{{ ansible_env.HOME }}/.bash_aliases"
     mode: 0664
     decrypt: false
-  when: "{{ use_zsh }}"
+  when: use_zsh and bal.stat.exists
   tags:
   - setup
   - dotfiles
