@@ -24,6 +24,7 @@
       - curl
       - bc
       - ansible
+      - wl-clipboard
   tags:
     - setup
     - core
