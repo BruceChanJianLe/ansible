@@ -18,6 +18,7 @@
       - curl
       - bc
       - ansible
+      - wl-clipboard
       # - ncurses-term 
       # - ssh-import-id
       # - software-properties-common
