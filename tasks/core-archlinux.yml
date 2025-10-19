@@ -19,6 +19,7 @@
       - bc
       - ansible
       - wl-clipboard
+      - ccache
       # - ncurses-term 
       # - ssh-import-id
       # - software-properties-common

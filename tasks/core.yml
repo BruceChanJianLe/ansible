@@ -25,6 +25,7 @@
       - bc
       - ansible
       - wl-clipboard
+      - ccache
   tags:
     - setup
     - core
