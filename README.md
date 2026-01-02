@@ -1,6 +1,6 @@
-This script is a quick way to setup your brand new laptop,
-or your docker containers in a swift manner. It currently supports
-Ubuntu and Arch!
+> This script is a quick way to setup your brand new laptop,
+> or your docker containers in a swift manner. It currently supports
+> Ubuntu and Arch!
 
 tags:
   - setup (all)
@@ -35,7 +35,8 @@ sudo pacman -S ansible git --noconfirm
 
 ## Full Setup without decryption
 
-(For anyone who wants to try)
+(For anyone who wants to try) Note that additional setup will be skipped for
+arm architecture.
 
 ```bash
 ansible-pull -U https://github.com/brucechanjianle/ansible --ask-become-pass
