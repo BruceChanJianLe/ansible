@@ -8,11 +8,12 @@
   - setup
   - nvim
 
-- name: Get ripgrep
+- name: Get ripgrep x86
   ansible.builtin.get_url:
     url: "https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_version }}/ripgrep_{{ ripgrep_version }}-1_amd64.deb"
     dest: "{{ ansible_env.HOME }}/Downloads/ripgrep_{{ ripgrep_version }}-1_amd64.deb"
     mode: '0664'
+  when: ansible_architecture == "x86_64"
   tags:
     - setup
     - nvim
@@ -27,28 +28,49 @@
     - setup
     - nvim
 
-- name: Install ripgrep
+- name: Install ripgrep x86
   become: yes
   ansible.builtin.apt:
     deb: 'https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_version }}/ripgrep_{{ ripgrep_version }}-1_amd64.deb'
-  when: ripgrep_check.failed
+  when: ripgrep_check.failed and ansible_architecture == "x86_64"
   tags:
     - setup
     - nvim
 
-- name: Get fd
+- name: Get fd x86
   ansible.builtin.get_url:
     url: "https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_amd64.deb"
     dest: "{{ ansible_env.HOME }}/Downloads/fd-musl_{{ fd_version }}_amd64.deb"
     mode: '0664'
+  when: ansible_architecture == "x86_64"
   tags:
     - setup
     - nvim
 
-- name: Install fd
+- name: Install fd x86
   become: yes
   ansible.builtin.apt:
     deb: 'https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_amd64.deb'
+  when: ansible_architecture == "x86_64"
+  tags:
+    - setup
+    - nvim
+
+- name: Get fd arm
+  ansible.builtin.get_url:
+    url: "https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_arm64.deb"
+    dest: "{{ ansible_env.HOME }}/Downloads/fd-musl_{{ fd_version }}_arm64.deb"
+    mode: '0664'
+  when: ansible_architecture == "aarch64"
+  tags:
+    - setup
+    - nvim
+
+- name: Install fd arm
+  become: yes
+  ansible.builtin.apt:
+    deb: 'https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_arm64.deb'
+  when: ansible_architecture == "aarch64"
   tags:
     - setup
     - nvim
