@@ -6,8 +6,8 @@
     bri_dest_key: "{{ ansible_env.HOME }}/.ssh/id_bri"
     dotfile_branch: "master"
     enable_decryption: false
-    ripgrep_version: 14.0.3
-    fd_version: 8.7.1
+    ripgrep_version: 15.1.0
+    fd_version: 10.3.0
     linux_distro: "{{ ansible_family_os }}"
     use_zsh: true
 
