@@ -35,7 +35,7 @@
       tags: [setup, core, ssh, base16, nvim, tmux, zsh, dotfiles, private_aliases]
 
     - include_tasks: setup-additional-Debian.yml
-      when: ansible_os_family == 'Debian'
+      when: ansible_os_family == 'Debian' and ansible_architecture == "x86_64"
       tags: [brave, nix, ghostty, additional]
 
     - include_tasks: setup-Archlinux.yml
