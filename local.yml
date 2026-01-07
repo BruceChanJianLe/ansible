@@ -1,14 +1,11 @@
 - hosts: all
   vars:
-    cjl_source_key: "./.ssh/id_cjl"
-    cjl_dest_key: "{{ ansible_env.HOME }}/.ssh/id_cjl"
-    bri_source_key: "./.ssh/id_bri"
-    bri_dest_key: "{{ ansible_env.HOME }}/.ssh/id_bri"
     dotfile_branch: "master"
-    enable_decryption: false
+    decrypt_bri: false
+    decrypt_elip: false
+    decrypt_cjl: false
     ripgrep_version: 15.1.0
     fd_version: 10.3.0
-    linux_distro: "{{ ansible_family_os }}"
     use_zsh: true
 
   pre_tasks:
