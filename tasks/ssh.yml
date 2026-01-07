@@ -1,60 +1,85 @@
 - name: Ensure .ssh directory exists.
   file:
     dest: "{{ ansible_env.HOME }}/.ssh"
-    mode: 0700
+    mode: '700'
     state: directory
   tags:
   - ssh
   - dotfiles
   - setup
 
-- name: Install cjl ssh key
-  ansible.builtin.copy:
-    src: "{{ cjl_source_key }}"
-    dest: "{{ cjl_dest_key }}"
-    mode: 0600
-    decrypt: false
+- name: Cloning em' (1)
+  vars:
+    ssh_dir: "{{ ansible_env.HOME }}/.ssh/"
+    users:
+      - { name: "id_cjl" }
+      - { name: "id_bri" }
+      - { name: "id_elip" }
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/BruceChanJianLe/dotfiles/refs/heads/master/.ssh/{{ item['name'] }}"
+    dest: "{{ ansible_env.HOME }}/.ssh/{{ item['name'] }}"
+    mode: '600'
+  with_items: "{{ users }}"
   tags:
   - ssh
   - dotfiles
   - setup
 
-- name: Install cjl ssh key public
-  ansible.builtin.copy:
-    src: "{{ cjl_source_key }}.pub"
-    dest: "{{ cjl_dest_key }}.pub"
-    mode: 0644
+- name: Cloning em' (2)
+  vars:
+    ssh_dir: "{{ ansible_env.HOME }}/.ssh/"
+    users:
+      - { name: "id_cjl.pub" }
+      - { name: "id_bri.pub" }
+      - { name: "id_elip.pub" }
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/BruceChanJianLe/dotfiles/refs/heads/master/.ssh/{{ item['name'] }}"
+    dest: "{{ ansible_env.HOME }}/.ssh/{{ item['name'] }}"
+    mode: '664'
+  with_items: "{{ users }}"
   tags:
   - ssh
   - dotfiles
   - setup
 
-- name: Install bri ssh key
+- name: Ask the Magic Conch Shell (1)
   ansible.builtin.copy:
-    src: "{{ bri_source_key }}"
-    dest: "{{ bri_dest_key }}"
-    mode: 0600
-    decrypt: "{{ enable_decryption }}"
+    src: "{{ ansible_env.HOME }}/.ssh/id_bri"
+    dest: "{{ ansible_env.HOME }}/.ssh/id_bri"
+    mode: '600'
+    decrypt: "{{ decrypt_bri }}"
   tags:
   - ssh
   - dotfiles
   - setup
 
-- name: Install bri ssh key public
+- name: Ask the Magic Conch Shell (2)
   ansible.builtin.copy:
-    src: "{{ bri_source_key }}.pub"
-    dest: "{{ bri_dest_key }}.pub"
-    mode: 0644
+    src: "{{ ansible_env.HOME }}/.ssh/id_elip"
+    dest: "{{ ansible_env.HOME }}/.ssh/id_elip"
+    mode: '600'
+    decrypt: "{{ decrypt_elip }}"
   tags:
   - ssh
   - dotfiles
   - setup
 
-- name: Copy ssh config file
+- name: Ask the Magic Conch Shell (3)
   ansible.builtin.copy:
-    src: ./.ssh/config
+    src: "{{ ansible_env.HOME }}/.ssh/id_cjl"
+    dest: "{{ ansible_env.HOME }}/.ssh/id_cjl"
+    mode: '600'
+    decrypt: "{{ decrypt_cjl }}"
+  tags:
+  - ssh
+  - dotfiles
+  - setup
+
+- name: Copy config file
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/BruceChanJianLe/dotfiles/refs/heads/master/.ssh/config"
     dest: "{{ ansible_env.HOME }}/.ssh/config"
-    mode: 0600
+    mode: '600'
   tags:
   - ssh
   - dotfiles
