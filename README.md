@@ -42,20 +42,20 @@ arm architecture.
 ansible-pull -U https://github.com/brucechanjianle/ansible --ask-become-pass
 ```
 
-## Full Setup with decryption
-
-(For you know who you are:)
-
-```bash
-ANSIBLE_ASK_VAULT_PASS=True ansible-pull -U https://github.com/brucechanjianle/ansible --ask-vault-pass -e "enable_decryption=true" --ask-become-pass
-```
-
 ## Partial Setup
 
 Partial setup, to be discreet! Works for docker/podman as well!
 
 ```bash
 ansible-pull -U https://github.com/brucechanjianle/ansible --skip-tags additional --ask-become-pass
+```
+
+## Full Setup with decryption
+
+(For all you supporters out there:)
+
+```bash
+ANSIBLE_ASK_VAULT_PASS=True ansible-pull -U https://github.com/brucechanjianle/ansible --ask-vault-pass -e "decrypt_bri=true" --ask-become-pass
 ```
 
 ## For Others
