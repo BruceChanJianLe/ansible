@@ -16,7 +16,7 @@
       - { name: "id_bri" }
       - { name: "id_elip" }
   ansible.builtin.get_url:
-    url: "https://raw.githubusercontent.com/BruceChanJianLe/dotfiles/refs/heads/master/.ssh/{{ item['name'] }}"
+    url: "https://raw.githubusercontent.com/BruceChanJianLe/dotfiles/refs/heads/master/.dotfiles/resources/{{ item['name'] }}"
     dest: "{{ ansible_env.HOME }}/.ssh/{{ item['name'] }}"
     mode: '600'
   with_items: "{{ users }}"
@@ -33,7 +33,7 @@
       - { name: "id_bri.pub" }
       - { name: "id_elip.pub" }
   ansible.builtin.get_url:
-    url: "https://raw.githubusercontent.com/BruceChanJianLe/dotfiles/refs/heads/master/.ssh/{{ item['name'] }}"
+    url: "https://raw.githubusercontent.com/BruceChanJianLe/dotfiles/refs/heads/master/.dotfiles/resources/{{ item['name'] }}"
     dest: "{{ ansible_env.HOME }}/.ssh/{{ item['name'] }}"
     mode: '664'
   with_items: "{{ users }}"
@@ -75,10 +75,11 @@
   - dotfiles
   - setup
 
+# May remove in the future if able to find target appropriately
 - name: Copy config file
   ansible.builtin.get_url:
-    url: "https://raw.githubusercontent.com/BruceChanJianLe/dotfiles/refs/heads/master/.ssh/config"
-    dest: "{{ ansible_env.HOME }}/.ssh/config"
+    url: "https://raw.githubusercontent.com/BruceChanJianLe/dotfiles/refs/heads/master/.dotfiles/resources/.config"
+    dest: "{{ ansible_env.HOME }}/.ssh/.config"
     mode: '600'
   tags:
   - ssh
