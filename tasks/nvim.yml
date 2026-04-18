@@ -122,7 +122,6 @@
 - name: Install nvim plugins
   become: no
   shell: nvim --headless -c 'autocmd User LazySync quitall' -c 'Lazy load markdown-preview.nvim'  -c 'Lazy build markdown-preview.nvim' -c 'Lazy sync'
-  when: ansible_architecture == "x86_64"
   # shell: nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
   # https://github.com/wbthomason/packer.nvim/issues/502
   tags:
