@@ -68,18 +68,18 @@
     - ghostty
     - additional
 
-- name: Check if tag v1.1.3 directory exists
+- name: Check if tag v1.0.0 directory exists
   ansible.builtin.stat:
-    path: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.1.3"
+    path: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0"
   register: dir_stat
   tags:
     - setup
     - ghostty
     - additional
 
-- name: Create v1.1.3 Git worktree
+- name: Create v1.0.0 Git worktree
   ansible.builtin.shell: |
-    git worktree add v1.1.3 v1.1.3
+    git worktree add v1.0.0 v1.0.0
   args:
     chdir: "{{ ansible_env.HOME }}/reference/ghostty.git"
   when: not dir_stat.stat.exists
@@ -94,7 +94,7 @@
     . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
     nix develop --accept-flake-config --command $(which zsh) -c "which zig | xargs -I {} sudo {} build -p /usr/local -Doptimize=ReleaseFast"
   args:
-    chdir: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.1.3"
+    chdir: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0"
   become: no
   tags:
     - setup
