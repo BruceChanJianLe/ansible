@@ -1,102 +1,108 @@
-- name: Check if ghostty directory is empty
-  find:
-    paths: "{{ ansible_env.HOME }}/.config/ghostty"
-    file_type: any
-  register: ghostty_contents
-  tags:
-    - setup
-    - ghostty
-    - additional
-
-- name: Clone repository if directory is empty
-  git:
-    repo: 'https://github.com/brucechanjianle/ghostty.git'
-    dest: "{{ ansible_env.HOME }}/.config/ghostty"
-    force: yes
-  when: ghostty_contents.matched == 0
-  tags:
-    - setup
-    - ghostty
-    - additional
-
-- name: Install required packages
-  ansible.builtin.apt:
-    name:
-      - libgtk-4-dev
-      - libadwaita-1-dev
+- name: Install Ghostty terminal via snap
+  community.general.snap:
+    name: ghostty
     state: present
-    update_cache: yes
-  become: yes
-  tags:
-    - setup
-    - ghostty
-    - additional
+    classic: true
 
-- name: Cloning ghostty
-  ansible.builtin.git:
-    repo: 'https://github.com/ghostty-org/ghostty.git'
-    dest: "{{ ansible_env.HOME }}/reference/ghostty.git"
-    recursive: yes
-    update: yes
-    accept_hostkey: yes
-    version: master
-    bare: true
-  tags:
-    - setup
-    - ghostty
-    - additional
-
-- name: Configure remote for correct fetch behavior
-  ansible.builtin.shell: |
-    git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-  args:
-    chdir: "{{ ansible_env.HOME }}/reference/ghostty.git"
-  become: no
-  tags:
-    - setup
-    - ghostty
-    - additional
-
-- name: Perform a git fetch
-  ansible.builtin.shell: |
-    git fetch
-  args:
-    chdir: "{{ ansible_env.HOME }}/reference/ghostty.git"
-  become: no
-  tags:
-    - setup
-    - ghostty
-    - additional
-
-- name: Check if tag v1.0.0 directory exists
-  ansible.builtin.stat:
-    path: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0"
-  register: dir_stat
-  tags:
-    - setup
-    - ghostty
-    - additional
-
-- name: Create v1.0.0 Git worktree
-  ansible.builtin.shell: |
-    git worktree add v1.0.0 v1.0.0
-  args:
-    chdir: "{{ ansible_env.HOME }}/reference/ghostty.git"
-  when: not dir_stat.stat.exists
-  become: no
-  tags:
-    - setup
-    - ghostty
-    - additional
-
-- name: Build Ghostty with Nix
-  ansible.builtin.shell: |
-    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-    nix develop --accept-flake-config --command $(which zsh) -c "which zig | xargs -I {} sudo {} build -p /usr/local -Doptimize=ReleaseFast"
-  args:
-    chdir: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0"
-  become: no
-  tags:
-    - setup
-    - ghostty
-    - additional
+# - name: Check if ghostty directory is empty
+#   find:
+#     paths: "{{ ansible_env.HOME }}/.config/ghostty"
+#     file_type: any
+#   register: ghostty_contents
+#   tags:
+#     - setup
+#     - ghostty
+#     - additional
+#
+# - name: Clone repository if directory is empty
+#   git:
+#     repo: 'https://github.com/brucechanjianle/ghostty.git'
+#     dest: "{{ ansible_env.HOME }}/.config/ghostty"
+#     force: yes
+#   when: ghostty_contents.matched == 0
+#   tags:
+#     - setup
+#     - ghostty
+#     - additional
+#
+# - name: Install required packages
+#   ansible.builtin.apt:
+#     name:
+#       - libgtk-4-dev
+#       - libadwaita-1-dev
+#     state: present
+#     update_cache: yes
+#   become: yes
+#   tags:
+#     - setup
+#     - ghostty
+#     - additional
+#
+# - name: Cloning ghostty
+#   ansible.builtin.git:
+#     repo: 'https://github.com/ghostty-org/ghostty.git'
+#     dest: "{{ ansible_env.HOME }}/reference/ghostty.git"
+#     recursive: yes
+#     update: yes
+#     accept_hostkey: yes
+#     version: master
+#     bare: true
+#   tags:
+#     - setup
+#     - ghostty
+#     - additional
+#
+# - name: Configure remote for correct fetch behavior
+#   ansible.builtin.shell: |
+#     git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+#   args:
+#     chdir: "{{ ansible_env.HOME }}/reference/ghostty.git"
+#   become: no
+#   tags:
+#     - setup
+#     - ghostty
+#     - additional
+#
+# - name: Perform a git fetch
+#   ansible.builtin.shell: |
+#     git fetch
+#   args:
+#     chdir: "{{ ansible_env.HOME }}/reference/ghostty.git"
+#   become: no
+#   tags:
+#     - setup
+#     - ghostty
+#     - additional
+#
+# - name: Check if tag v1.0.0 directory exists
+#   ansible.builtin.stat:
+#     path: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0"
+#   register: dir_stat
+#   tags:
+#     - setup
+#     - ghostty
+#     - additional
+#
+# - name: Create v1.0.0 Git worktree
+#   ansible.builtin.shell: |
+#     git worktree add v1.0.0 v1.0.0
+#   args:
+#     chdir: "{{ ansible_env.HOME }}/reference/ghostty.git"
+#   when: not dir_stat.stat.exists
+#   become: no
+#   tags:
+#     - setup
+#     - ghostty
+#     - additional
+#
+# - name: Build Ghostty with Nix
+#   ansible.builtin.shell: |
+#     . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+#     nix develop --accept-flake-config --command $(which zsh) -c "which zig | xargs -I {} sudo {} build -p /usr/local -Doptimize=ReleaseFast"
+#   args:
+#     chdir: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0"
+#   become: no
+#   tags:
+#     - setup
+#     - ghostty
+#     - additional
