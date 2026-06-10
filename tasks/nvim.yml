@@ -121,9 +121,12 @@
 
 - name: Install nvim plugins
   become: no
-  shell: nvim --headless -c 'autocmd User LazySync quitall' -c 'Lazy load markdown-preview.nvim'  -c 'Lazy build markdown-preview.nvim' -c 'Lazy sync'
+  shell: nvim --headless -c 'autocmd User LazySync quitall' -c 'Lazy sync'
+  # To setup markdown-preview plugin run
+  # nvim --headless -c 'Lazy load markdown-preview.nvim'  -c 'Lazy build markdown-preview.nvim'
   # shell: nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
   # https://github.com/wbthomason/packer.nvim/issues/502
+  ignore_errors: true
   tags:
     - setup
     - nvim
