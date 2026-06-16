@@ -104,6 +104,7 @@
     name: ssh
     enabled: yes
     state: started
+  ignore_errors: true
   when: ansible_os_family == "Debian"
   tags:
   - ssh
@@ -116,6 +117,7 @@
     name: sshd
     enabled: yes
     state: started
+  ignore_errors: true
   when: ansible_os_family == "Archlinux"
   tags:
   - ssh
