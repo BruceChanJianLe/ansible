@@ -9,9 +9,9 @@
   tags: nvim
 - include_tasks: tasks/tmux.yml
   tags: tmux
-- include_tasks: tasks/zsh.yml
-  tags: zsh
 - include_tasks: tasks/dotfiles.yml
   tags: dotfiles
+- include_tasks: tasks/zsh.yml
+  tags: zsh
 - include_tasks: tasks/p-aliases.yml
   tags: private_aliases

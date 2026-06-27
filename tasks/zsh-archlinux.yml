@@ -159,3 +159,18 @@
   tags:
     - setup
     - zsh
+
+# Trigger zap to clone the plugins listed in .zshrc by sourcing it once.
+# `zsh -i` is required because `plug` only runs when .zshrc is sourced (a plain
+# non-interactive `zsh -c` does not source it). `-c 'exit'` runs no human-facing
+# prompt and exits immediately; stdin from /dev/null guarantees it never blocks.
+# Guarded by `creates` so it is skipped once plugins exist; failure is ignored so
+# it can never break the rest of the provisioning run.
+- name: Trigger zap plugin cloning by running zsh once
+  ansible.builtin.shell:
+    cmd: zsh -i -c 'exit' </dev/null
+    creates: "{{ ansible_env.HOME }}/.local/share/zap/plugins"
+  ignore_errors: true
+  tags:
+    - setup
+    - zsh
