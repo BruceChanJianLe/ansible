@@ -1,9 +1,18 @@
+- name: Check .bashrc exists
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+  register: brc
+  tags:
+  - setup
+  - dotfiles
+
 - name: Make backup .bashrc
   ansible.builtin.copy:
     src: "{{ ansible_env.HOME }}/.bashrc"
     dest: "{{ ansible_env.HOME }}/.bashrc.ori"
     mode: 0664
     decrypt: false
+  when: brc.stat.exists
   tags:
   - setup
   - dotfiles
@@ -58,7 +67,7 @@
     dest: "{{ ansible_env.HOME }}/.bashrc"
     mode: 0664
     decrypt: false
-  when: use_zsh
+  when: use_zsh and brc.stat.exists
   tags:
   - setup
   - dotfiles
