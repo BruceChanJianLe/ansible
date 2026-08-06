@@ -1,6 +1,6 @@
 > This script is a quick way to setup your brand new laptop,
 > or your docker containers in a swift manner. It currently supports
-> Ubuntu and Arch!
+> Ubuntu, Arch, and macOS!
 
 tags:
   - setup (all)
@@ -29,6 +29,12 @@ sudo apt install ansible git -y
 
 ```bash
 sudo pacman -S ansible git --noconfirm
+```
+
+## macOS
+
+```bash
+brew install ansible git
 ```
 
 # Setting Up New Laptop
@@ -70,13 +76,13 @@ ansible-playbook local.yml --ask-become-pass -l others
 
 # Post-Installation (Optional)
 
-Set ghostty as your default terminal!
+Set ghostty as your default terminal! (Linux only)
 
 ```bash
 sudo update-alternatives --install /usr/bin/x-terminal-emulator x-terminal-emulator /usr/local/bin/ghostty 100
 ```
 
-Set nvim as your default editor!
+Set nvim as your default editor! (Linux only)
 ```bash
 sudo update-alternatives --install /usr/bin/editor editor /usr/local/bin/nvim 100
 ```
