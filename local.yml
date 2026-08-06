@@ -26,6 +26,11 @@
       state: present
     when: ansible_os_family == "Archlinux"
 
+  - name: Update Homebrew
+    community.general.homebrew:
+      update_homebrew: true
+    when: ansible_os_family == "Darwin"
+
   tasks:
     - include_tasks: setup-Debian.yml
       when: ansible_os_family == 'Debian'
@@ -42,3 +47,11 @@
     - include_tasks: setup-additional-Archlinux.yml
       when: ansible_os_family == "Archlinux"
       tags: [brave, nix, ghostty, spotify, additional, yay]
+
+    - include_tasks: setup-Darwin.yml
+      when: ansible_os_family == "Darwin"
+      tags: [setup, core, ssh, base16, nvim, tmux, zsh, dotfiles, private_aliases]
+
+    - include_tasks: setup-additional-Darwin.yml
+      when: ansible_os_family == "Darwin"
+      tags: [nix, ghostty, additional]
