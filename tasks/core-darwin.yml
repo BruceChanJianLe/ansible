@@ -1,0 +1,19 @@
+# Core packages
+- name: Install developer packages
+  community.general.homebrew:
+    name:
+      - cmake
+      - cppcheck
+      - gdb
+      - git
+      - openssh
+      - glog
+      - libusb
+      - wget
+      - curl
+      - bc
+      - ansible
+      - ccache
+    state: present
+  tags:
+    - core

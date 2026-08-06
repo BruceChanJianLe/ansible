@@ -1,0 +1,35 @@
+- name: Install neovim and dependencies
+  community.general.homebrew:
+    name:
+      - neovim
+      - ripgrep
+      - fd
+      - luarocks
+      - imagemagick
+    state: present
+  tags:
+    - setup
+    - nvim
+
+- name: Install python virtualenv
+  community.general.homebrew:
+    name: virtualenv
+    state: present
+  tags:
+    - setup
+    - nvim
+
+- name: Clone nvim
+  ansible.builtin.git:
+    repo: 'https://github.com/brucechanjianle/nvim.git'
+    dest: "{{ ansible_env.HOME }}/.config/nvim"
+  tags:
+    - setup
+    - nvim
+
+- name: Install nvim plugins
+  become: no
+  shell: nvim --headless -c 'autocmd User LazySync quitall' -c 'Lazy sync'
+  tags:
+    - setup
+    - nvim

@@ -1,0 +1,17 @@
+---
+- include_tasks: tasks/core-darwin.yml
+  tags: core
+- include_tasks: tasks/ssh.yml
+  tags: [dotfiles, ssh]
+- include_tasks: tasks/base16.yml
+  tags: base16
+- include_tasks: tasks/nvim-darwin.yml
+  tags: nvim
+- include_tasks: tasks/tmux-darwin.yml
+  tags: tmux
+- include_tasks: tasks/dotfiles.yml
+  tags: dotfiles
+- include_tasks: tasks/zsh-darwin.yml
+  tags: zsh
+- include_tasks: tasks/p-aliases.yml
+  tags: private_aliases
