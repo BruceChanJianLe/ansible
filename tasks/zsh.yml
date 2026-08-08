@@ -23,7 +23,7 @@
     - setup
     - zsh
 
-# Channge to zsh from ghostty config
+# Change to zsh from ghostty config
 # - name: Change shell to zsh
 #   become: yes
 #   shell: sudo chsh -s $(which zsh)
