@@ -13,7 +13,7 @@
     url: "https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_version }}/ripgrep_{{ ripgrep_version }}-1_amd64.deb"
     dest: "{{ ansible_facts['env']['HOME'] }}/Downloads/ripgrep_{{ ripgrep_version }}-1_amd64.deb"
     mode: '0664'
-  when: ansible_architecture == "x86_64"
+  when: ansible_facts['architecture'] == "x86_64"
   tags:
     - setup
     - nvim
@@ -32,7 +32,7 @@
   become: yes
   ansible.builtin.apt:
     deb: 'https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_version }}/ripgrep_{{ ripgrep_version }}-1_amd64.deb'
-  when: ripgrep_check.failed and ansible_architecture == "x86_64"
+  when: ripgrep_check.failed and ansible_facts['architecture'] == "x86_64"
   tags:
     - setup
     - nvim
@@ -42,7 +42,7 @@
     url: "https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_amd64.deb"
     dest: "{{ ansible_facts['env']['HOME'] }}/Downloads/fd-musl_{{ fd_version }}_amd64.deb"
     mode: '0664'
-  when: ansible_architecture == "x86_64"
+  when: ansible_facts['architecture'] == "x86_64"
   tags:
     - setup
     - nvim
@@ -51,7 +51,7 @@
   become: yes
   ansible.builtin.apt:
     deb: 'https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_amd64.deb'
-  when: ansible_architecture == "x86_64"
+  when: ansible_facts['architecture'] == "x86_64"
   tags:
     - setup
     - nvim
@@ -61,7 +61,7 @@
     url: "https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_arm64.deb"
     dest: "{{ ansible_facts['env']['HOME'] }}/Downloads/fd-musl_{{ fd_version }}_arm64.deb"
     mode: '0664'
-  when: ansible_architecture == "aarch64"
+  when: ansible_facts['architecture'] == "aarch64"
   tags:
     - setup
     - nvim
@@ -70,7 +70,7 @@
   become: yes
   ansible.builtin.apt:
     deb: 'https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_arm64.deb'
-  when: ansible_architecture == "aarch64"
+  when: ansible_facts['architecture'] == "aarch64"
   tags:
     - setup
     - nvim
@@ -113,8 +113,12 @@
     - setup
     - nvim
 
-- name: Build nvim
-  shell: "{{ ansible_facts['env']['HOME'] }}/.config/nvim/install_neovim.bash -a true -d true"
+- name: Install nvim
+  become: yes
+  community.general.snap:
+    name: nvim
+    state: present
+    classic: true
   tags:
     - setup
     - nvim

@@ -1,6 +1,6 @@
 - name: Install Ghostty terminal via snap
-  community.general.snap:
   become: yes
+  community.general.snap:
     name: ghostty
     state: present
     classic: true
