@@ -4,6 +4,9 @@
     name: ghostty
     state: present
     classic: true
+  tags:
+    - setup
+    - ghostty
 
 # - name: Check if ghostty directory is empty
 #   find:
