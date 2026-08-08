@@ -8,6 +8,28 @@
     - setup
     - ghostty
 
+- name: Check if xterm-ghostty terminfo is installed for user
+  ansible.builtin.command: infocmp -x xterm-ghostty
+  register: ghostty_local_terminfo
+  failed_when: false
+  changed_when: false
+  environment:
+    HOME: "{{ ansible_facts['env']['HOME'] }}"
+  tags:
+    - setup
+    - ghostty
+
+# This is ensure if you ssh with ghostty, you get the caps
+- name: Install xterm-ghostty terminfo to user's ~/.terminfo
+  ansible.builtin.shell: >
+    TERMINFO=/snap/ghostty/current/share/terminfo infocmp -x xterm-ghostty | tic -x -
+  when: ghostty_local_terminfo.rc != 0
+  environment:
+    HOME: "{{ ansible_facts['env']['HOME'] }}"
+  tags:
+    - setup
+    - ghostty
+
 # - name: Check if ghostty directory is empty
 #   find:
 #     paths: "{{ ansible_facts['env']['HOME'] }}/.config/ghostty"
