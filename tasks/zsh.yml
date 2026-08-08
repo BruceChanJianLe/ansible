@@ -7,8 +7,18 @@
     - setup
     - zsh
 
+- name: Install zsh and friends
+  become: yes
+  apt:
+    name:
+      - zsh
+      - zsh-syntax-highlighting
+  tags:
+    - setup
+    - zsh
+
 - name: Install zsh
-  shell: "{{ ansible_facts['env']['HOME'] }}/.config/zsh/install_zsh.bash -a true"
+  shell: "{{ ansible_facts['env']['HOME'] }}/.config/zsh/install_zap.bash -a true"
   tags:
     - setup
     - zsh
