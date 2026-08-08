@@ -15,7 +15,7 @@
 - name: Clone nvim
   ansible.builtin.git:
     repo: 'https://github.com/brucechanjianle/nvim.git'
-    dest: "{{ ansible_env.HOME }}/.config/nvim"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.config/nvim"
   tags:
     - setup
     - nvim

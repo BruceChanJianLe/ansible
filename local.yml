@@ -28,17 +28,17 @@
 
   tasks:
     - include_tasks: setup-Debian.yml
-      when: ansible_os_family == 'Debian'
+      when: ansible_facts['os_family'] == 'Debian'
       tags: [setup, core, ssh, base16, nvim, tmux, zsh, dotfiles, private_aliases]
 
     - include_tasks: setup-additional-Debian.yml
-      when: ansible_os_family == 'Debian' and ansible_architecture == "x86_64"
+      when: ansible_facts['os_family'] == 'Debian' and ansible_architecture == "x86_64"
       tags: [brave, nix, ghostty, additional]
 
     - include_tasks: setup-Archlinux.yml
-      when: ansible_os_family == "Archlinux"
+      when: ansible_facts['os_family'] == "Archlinux"
       tags: [setup, core, ssh, base16, nvim, tmux, zsh, dotfiles, hyprland, private_aliases]
 
     - include_tasks: setup-additional-Archlinux.yml
-      when: ansible_os_family == "Archlinux"
+      when: ansible_facts['os_family'] == "Archlinux"
       tags: [brave, nix, ghostty, spotify, additional, yay]

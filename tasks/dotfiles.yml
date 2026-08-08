@@ -1,7 +1,7 @@
 - name: Make backup .bashrc
   ansible.builtin.copy:
-    src: "{{ ansible_env.HOME }}/.bashrc"
-    dest: "{{ ansible_env.HOME }}/.bashrc.ori"
+    src: "{{ ansible_facts['env']['HOME'] }}/.bashrc"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.bashrc.ori"
     mode: 0664
     decrypt: false
   tags:
@@ -10,7 +10,7 @@
 
 - name: Check .bash_aliases exist
   ansible.builtin.stat:
-    path: "{{ ansible_env.HOME }}/.bash_aliases"
+    path: "{{ ansible_facts['env']['HOME'] }}/.bash_aliases"
   register: bal
   tags:
   - setup
@@ -18,8 +18,8 @@
 
 - name: Make backup .bash_aliases
   ansible.builtin.copy:
-    src: "{{ ansible_env.HOME }}/.bash_aliases"
-    dest: "{{ ansible_env.HOME }}/.bash_aliases.ori"
+    src: "{{ ansible_facts['env']['HOME'] }}/.bash_aliases"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.bash_aliases.ori"
     mode: 0664
     decrypt: false
   when: bal.stat.exists
@@ -30,7 +30,7 @@
 - name: Cloning dotfiles
   ansible.builtin.git:
     repo: 'https://github.com/BruceChanJianLe/dotfiles.git'
-    dest: "{{ ansible_env.HOME }}/.dotfiles"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.dotfiles"
     recursive: yes
     update: yes
     accept_hostkey: yes
@@ -54,8 +54,8 @@
 
 - name: Restore original .bashrc
   ansible.builtin.copy:
-    src: "{{ ansible_env.HOME }}/.bashrc.ori"
-    dest: "{{ ansible_env.HOME }}/.bashrc"
+    src: "{{ ansible_facts['env']['HOME'] }}/.bashrc.ori"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.bashrc"
     mode: 0664
     decrypt: false
   when: use_zsh
@@ -65,8 +65,8 @@
 
 - name: Restore original .bash_aliases
   ansible.builtin.copy:
-    src: "{{ ansible_env.HOME }}/.bash_aliases.ori"
-    dest: "{{ ansible_env.HOME }}/.bash_aliases"
+    src: "{{ ansible_facts['env']['HOME'] }}/.bash_aliases.ori"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.bash_aliases"
     mode: 0664
     decrypt: false
   when: use_zsh and bal.stat.exists

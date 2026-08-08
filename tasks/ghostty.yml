@@ -7,7 +7,7 @@
 
 # - name: Check if ghostty directory is empty
 #   find:
-#     paths: "{{ ansible_env.HOME }}/.config/ghostty"
+#     paths: "{{ ansible_facts['env']['HOME'] }}/.config/ghostty"
 #     file_type: any
 #   register: ghostty_contents
 #   tags:
@@ -18,7 +18,7 @@
 # - name: Clone repository if directory is empty
 #   git:
 #     repo: 'https://github.com/brucechanjianle/ghostty.git'
-#     dest: "{{ ansible_env.HOME }}/.config/ghostty"
+#     dest: "{{ ansible_facts['env']['HOME'] }}/.config/ghostty"
 #     force: yes
 #   when: ghostty_contents.matched == 0
 #   tags:
@@ -42,7 +42,7 @@
 # - name: Cloning ghostty
 #   ansible.builtin.git:
 #     repo: 'https://github.com/ghostty-org/ghostty.git'
-#     dest: "{{ ansible_env.HOME }}/reference/ghostty.git"
+#     dest: "{{ ansible_facts['env']['HOME'] }}/reference/ghostty.git"
 #     recursive: yes
 #     update: yes
 #     accept_hostkey: yes
@@ -57,7 +57,7 @@
 #   ansible.builtin.shell: |
 #     git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 #   args:
-#     chdir: "{{ ansible_env.HOME }}/reference/ghostty.git"
+#     chdir: "{{ ansible_facts['env']['HOME'] }}/reference/ghostty.git"
 #   become: no
 #   tags:
 #     - setup
@@ -68,7 +68,7 @@
 #   ansible.builtin.shell: |
 #     git fetch
 #   args:
-#     chdir: "{{ ansible_env.HOME }}/reference/ghostty.git"
+#     chdir: "{{ ansible_facts['env']['HOME'] }}/reference/ghostty.git"
 #   become: no
 #   tags:
 #     - setup
@@ -77,7 +77,7 @@
 #
 # - name: Check if tag v1.0.0 directory exists
 #   ansible.builtin.stat:
-#     path: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0"
+#     path: "{{ ansible_facts['env']['HOME'] }}/reference/ghostty.git/v1.0.0"
 #   register: dir_stat
 #   tags:
 #     - setup
@@ -88,7 +88,7 @@
 #   ansible.builtin.shell: |
 #     git worktree add v1.0.0 v1.0.0
 #   args:
-#     chdir: "{{ ansible_env.HOME }}/reference/ghostty.git"
+#     chdir: "{{ ansible_facts['env']['HOME'] }}/reference/ghostty.git"
 #   when: not dir_stat.stat.exists
 #   become: no
 #   tags:
@@ -101,7 +101,7 @@
 #     . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 #     nix develop --accept-flake-config --command $(which zsh) -c "which zig | xargs -I {} sudo {} build -p /usr/local -Doptimize=ReleaseFast"
 #   args:
-#     chdir: "{{ ansible_env.HOME }}/reference/ghostty.git/v1.0.0"
+#     chdir: "{{ ansible_facts['env']['HOME'] }}/reference/ghostty.git/v1.0.0"
 #   become: no
 #   tags:
 #     - setup

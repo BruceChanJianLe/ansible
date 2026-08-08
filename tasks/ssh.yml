@@ -1,6 +1,6 @@
 - name: Ensure .ssh directory exists.
   file:
-    dest: "{{ ansible_env.HOME }}/.ssh"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.ssh"
     mode: '700'
     state: directory
   tags:
@@ -10,14 +10,14 @@
 
 - name: Cloning em' (1)
   vars:
-    ssh_dir: "{{ ansible_env.HOME }}/.ssh/"
+    ssh_dir: "{{ ansible_facts['env']['HOME'] }}/.ssh/"
     users:
       - { name: "id_cjl" }
       - { name: "id_bri" }
       - { name: "id_elip" }
   ansible.builtin.get_url:
     url: "https://raw.githubusercontent.com/BruceChanJianLe/dotfiles/refs/heads/master/.dotfiles/resources/{{ item['name'] }}"
-    dest: "{{ ansible_env.HOME }}/.ssh/{{ item['name'] }}"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.ssh/{{ item['name'] }}"
     mode: '600'
   with_items: "{{ users }}"
   tags:
@@ -27,14 +27,14 @@
 
 - name: Cloning em' (2)
   vars:
-    ssh_dir: "{{ ansible_env.HOME }}/.ssh/"
+    ssh_dir: "{{ ansible_facts['env']['HOME'] }}/.ssh/"
     users:
       - { name: "id_cjl.pub" }
       - { name: "id_bri.pub" }
       - { name: "id_elip.pub" }
   ansible.builtin.get_url:
     url: "https://raw.githubusercontent.com/BruceChanJianLe/dotfiles/refs/heads/master/.dotfiles/resources/{{ item['name'] }}"
-    dest: "{{ ansible_env.HOME }}/.ssh/{{ item['name'] }}"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.ssh/{{ item['name'] }}"
     mode: '664'
   with_items: "{{ users }}"
   tags:
@@ -44,8 +44,8 @@
 
 - name: Ask the Magic Conch Shell (1)
   ansible.builtin.copy:
-    src: "{{ ansible_env.HOME }}/.ssh/id_bri"
-    dest: "{{ ansible_env.HOME }}/.ssh/id_bri"
+    src: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_bri"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_bri"
     mode: '600'
     decrypt: "{{ decrypt_bri }}"
   tags:
@@ -55,8 +55,8 @@
 
 - name: Ask the Magic Conch Shell (2)
   ansible.builtin.copy:
-    src: "{{ ansible_env.HOME }}/.ssh/id_elip"
-    dest: "{{ ansible_env.HOME }}/.ssh/id_elip"
+    src: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_elip"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_elip"
     mode: '600'
     decrypt: "{{ decrypt_elip }}"
   tags:
@@ -66,8 +66,8 @@
 
 - name: Ask the Magic Conch Shell (3)
   ansible.builtin.copy:
-    src: "{{ ansible_env.HOME }}/.ssh/id_cjl"
-    dest: "{{ ansible_env.HOME }}/.ssh/id_cjl"
+    src: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_cjl"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_cjl"
     mode: '600'
     decrypt: "{{ decrypt_cjl }}"
   tags:
@@ -79,7 +79,7 @@
 - name: Copy config file
   ansible.builtin.get_url:
     url: "https://raw.githubusercontent.com/BruceChanJianLe/dotfiles/refs/heads/master/.dotfiles/resources/.config"
-    dest: "{{ ansible_env.HOME }}/.ssh/.config"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.ssh/.config"
     mode: '600'
   tags:
   - ssh
@@ -88,11 +88,11 @@
 
 - name: Set authorized key took from file
   authorized_key:
-    user: "{{ ansible_env.HOME }}"
+    user: "{{ ansible_facts['env']['HOME'] }}"
     state: present
-    key: "{{ ansible_env.HOME }}/.ssh/id_cjl.pub"
+    key: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_cjl.pub"
   with_fileglob:
-  - "{{ ansible_env.HOME }}/.ssh/cjl.pub"
+  - "{{ ansible_facts['env']['HOME'] }}/.ssh/cjl.pub"
   tags:
   - ssh
   - dotfiles
@@ -105,7 +105,7 @@
     enabled: yes
     state: started
   ignore_errors: true
-  when: ansible_os_family == "Debian"
+  when: ansible_facts['os_family'] == "Debian"
   tags:
   - ssh
   - dotfiles
@@ -118,7 +118,7 @@
     enabled: yes
     state: started
   ignore_errors: true
-  when: ansible_os_family == "Archlinux"
+  when: ansible_facts['os_family'] == "Archlinux"
   tags:
   - ssh
   - dotfiles
