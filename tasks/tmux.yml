@@ -33,7 +33,7 @@
       - { name: "tpm", repo: "https://github.com/tmux-plugins/tpm.git", version: "master" }
       - { name: "tmux-resurrect", repo: "https://github.com/tmux-plugins/tmux-resurrect.git", version: "master" }
       - { name: "tmux-continuum", repo: "https://github.com/tmux-plugins/tmux-continuum.git", version: "master" }
-      - { name: "tmux-syncer", repo: "https://github.com/brucechanjianle/tmux-syncer.git", version: "main" }
+      - { name: "tmux-syncer", repo: "https://github.com/brucechanjianle/tmux-syncer.git", version: "master" }
   ansible.builtin.git:
     repo: "{{ item['repo'] }}"
     dest: "{{ tmux_plugin_dir }}/{{ item['name'] }}"
