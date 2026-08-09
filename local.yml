@@ -9,6 +9,19 @@
     use_zsh: true
 
   pre_tasks:
+  - name: Check for classic sudo (sudo.ws)
+    become: false
+    ansible.builtin.stat:
+      path: /usr/bin/sudo.ws
+    register: sudo_ws
+    tags: always
+
+  - name: Prefer classic sudo where sudo-rs is the default
+    become: false
+    ansible.builtin.set_fact:
+      ansible_become_exe: "{{ '/usr/bin/sudo.ws' if sudo_ws.stat.exists else '/usr/bin/sudo' }}"
+    tags: always
+
   - name: Update Apt
     become: true
     apt:
