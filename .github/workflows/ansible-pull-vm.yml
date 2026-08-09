@@ -1,0 +1,209 @@
+# Boots a pristine Ubuntu cloud image under QEMU/KVM and runs the documented
+# `ansible-pull` one-liner inside it, as a normal user whose sudo asks for a
+# password. Containers are deliberately not used: the playbook installs snaps
+# (ghostty, nvim) and the multi-user nix daemon, both of which need a real
+# kernel and systemd.
+---
+name: ansible-pull on a fresh Ubuntu VM
+
+on:
+  push:
+    branches: [u26-test]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch to pull and test
+        default: u26-test
+  # Once this merges to master, add a weekly cron here. Everything this
+  # playbook installs comes from an unpinned upstream (nixos.org/nix/install,
+  # Brave's apt repo, the ghostty/nvim snap channels), so drift is the thing
+  # worth catching on a timer.
+  # schedule:
+  #   - cron: "0 3 * * 1"
+
+jobs:
+  pull:
+    name: Ubuntu ${{ matrix.release }}
+    runs-on: ubuntu-24.04 # host only - the guest release is what is under test
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false # a red 24.04 must not cancel 26.04
+      matrix:
+        include:
+          - release: "24.04"
+            codename: noble
+          - release: "26.04"
+            codename: resolute
+
+    env:
+      VM: /mnt/vm
+      SSH_OPTS: >-
+        -p 2222 -i /mnt/vm/id_vm
+        -o StrictHostKeyChecking=no
+        -o UserKnownHostsFile=/dev/null
+        -o LogLevel=ERROR
+
+    steps:
+      - name: Enable KVM for the runner user
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          # Fail here rather than silently falling back to software emulation,
+          # which is ~20x slower and would just blow the job timeout instead.
+          test -w /dev/kvm
+
+      - name: Install host tooling
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            qemu-system-x86 qemu-utils cloud-image-utils ovmf
+
+      - name: Fetch the Ubuntu ${{ matrix.release }} cloud image
+        run: |
+          set -euo pipefail
+          # /mnt is the runner's large ephemeral disk; / only has ~14 GB free,
+          # which a full apt upgrade plus brave plus nix plus two snaps exceeds.
+          sudo mkdir -p "$VM"
+          sudo chown "$USER" "$VM"
+
+          img="ubuntu-${{ matrix.release }}-server-cloudimg-amd64.img"
+          releases="https://cloud-images.ubuntu.com/releases/${{ matrix.release }}/release/$img"
+          daily="https://cloud-images.ubuntu.com/${{ matrix.codename }}/current/${{ matrix.codename }}-server-cloudimg-amd64.img"
+
+          curl -fL --retry 3 "$releases" -o "$VM/disk.qcow2" \
+            || curl -fL --retry 3 "$daily" -o "$VM/disk.qcow2"
+
+          qemu-img resize "$VM/disk.qcow2" +40G # cloud-init growpart expands root on boot
+          qemu-img info "$VM/disk.qcow2"
+
+      - name: Seed cloud-init
+        run: |
+          set -euo pipefail
+          ssh-keygen -t ed25519 -N '' -q -f "$VM/id_vm"
+
+          pw="$(openssl rand -hex 16)"
+          echo "::add-mask::$pw"
+          echo "VM_PASSWORD=$pw" >> "$GITHUB_ENV"
+
+          cat > "$VM/user-data" <<EOF
+          #cloud-config
+          hostname: ubuntu-test
+          users:
+            - name: tester
+              groups: [sudo]
+              shell: /bin/bash
+              lock_passwd: false
+              passwd: "$(openssl passwd -6 "$pw")"
+              ssh_authorized_keys:
+                - $(cat "$VM/id_vm.pub")
+          chpasswd:
+            expire: false
+          package_update: true
+          # Exactly the bootstrap the README documents - nothing more, so a
+          # missing dependency surfaces here instead of being papered over.
+          packages: [ansible, git]
+          EOF
+
+          # Note the absence of `sudo: ALL=(ALL) NOPASSWD:ALL` above. Membership
+          # of the sudo group alone means sudo prompts for a password, which is
+          # what makes this a real test of the --ask-become-pass path.
+          cloud-localds "$VM/seed.iso" "$VM/user-data"
+
+      - name: Boot the VM
+        run: |
+          set -euo pipefail
+          code=/usr/share/OVMF/OVMF_CODE_4M.fd
+          vars=/usr/share/OVMF/OVMF_VARS_4M.fd
+          [ -f "$code" ] || code=/usr/share/OVMF/OVMF_CODE.fd
+          [ -f "$vars" ] || vars=/usr/share/OVMF/OVMF_VARS.fd
+          cp "$vars" "$VM/OVMF_VARS.fd"
+
+          qemu-system-x86_64 \
+            -machine q35,accel=kvm -cpu host -smp "$(nproc)" -m 4096 \
+            -drive if=pflash,format=raw,unit=0,readonly=on,file="$code" \
+            -drive if=pflash,format=raw,unit=1,file="$VM/OVMF_VARS.fd" \
+            -drive file="$VM/disk.qcow2",if=virtio,format=qcow2 \
+            -drive file="$VM/seed.iso",if=virtio,format=raw \
+            -netdev user,id=n0,hostfwd=tcp::2222-:22 -device virtio-net-pci,netdev=n0 \
+            -device virtio-rng-pci \
+            -display none -serial "file:$VM/serial.log" -daemonize
+
+          for _ in $(seq 1 60); do
+            if ssh $SSH_OPTS -o ConnectTimeout=5 tester@127.0.0.1 true 2>/dev/null; then
+              echo "SSH is up."
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::VM did not come up within 10 minutes"
+          tail -n 100 "$VM/serial.log"
+          exit 1
+
+      - name: Wait for cloud-init to finish
+        run: |
+          set -euo pipefail
+          ssh $SSH_OPTS tester@127.0.0.1 'cloud-init status --wait'
+          ssh $SSH_OPTS tester@127.0.0.1 '. /etc/os-release; echo "$PRETTY_NAME"; ansible --version | head -n1; git --version'
+
+      - name: ansible-pull
+        timeout-minutes: 60
+        run: |
+          set -euo pipefail
+          branch="${{ inputs.branch || github.ref_name }}"
+          repo="https://github.com/${{ github.repository }}"
+          echo "Pulling $repo @ $branch"
+
+          # Piped in rather than passed as an argument so the password never
+          # appears in the guest's process list.
+          printf '%s' "$VM_PASSWORD" \
+            | ssh $SSH_OPTS tester@127.0.0.1 'umask 077; cat > ~/.become_pass'
+
+          # -C is essential: a bare `ansible-pull -U ...` checks out the repo's
+          # default branch, so without it this would silently test master.
+          # ANSIBLE_BECOME_PASSWORD_FILE is the non-interactive equivalent of
+          # --ask-become-pass; ansible feeds it to `sudo -S` either way.
+          ssh $SSH_OPTS tester@127.0.0.1 "
+            ANSIBLE_BECOME_PASSWORD_FILE=\$HOME/.become_pass \
+              ansible-pull -U '$repo' -C '$branch'
+            rc=\$?
+            rm -f \$HOME/.become_pass
+            exit \$rc
+          " 2>&1 | tee "$VM/ansible-pull.log"
+
+      - name: Verify ghostty, brave and nix
+        run: |
+          set -euo pipefail
+          # A fresh login shell, so anything the run added to the environment
+          # (notably nix's /etc/profile.d/nix.sh) has to actually work.
+          ssh $SSH_OPTS tester@127.0.0.1 'bash -lc "
+            set -exo pipefail
+            snap list ghostty
+            /snap/bin/ghostty --version
+            infocmp -x xterm-ghostty > /dev/null
+            brave-browser --version
+            nix --version
+          "'
+
+      - name: Collect the guest journal
+        if: failure()
+        run: |
+          printf '%s\n' "$VM_PASSWORD" \
+            | ssh $SSH_OPTS tester@127.0.0.1 'sudo -S -p "" journalctl -b --no-pager' \
+            > "$VM/journal.log" || true
+
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vm-logs-${{ matrix.release }}
+          path: |
+            /mnt/vm/serial.log
+            /mnt/vm/ansible-pull.log
+            /mnt/vm/journal.log
+          if-no-files-found: warn
+
+      - name: Shut down the VM
+        if: always()
+        run: pkill -f qemu-system-x86_64 || true
