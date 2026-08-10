@@ -125,7 +125,7 @@
 
 - name: Install nvim plugins
   become: no
-  shell: nvim --headless -c 'autocmd User LazySync quitall' -c 'Lazy sync' > /dev/null 2>&1
+  shell: 'nvim --headless "+Lazy! sync" +qa > /dev/null 2>&1'
   # To setup markdown-preview plugin run
   # nvim --headless -c 'Lazy load markdown-preview.nvim'  -c 'Lazy build markdown-preview.nvim'
   # shell: nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
