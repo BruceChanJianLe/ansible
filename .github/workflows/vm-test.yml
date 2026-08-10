@@ -166,20 +166,23 @@ jobs:
           repo="https://github.com/${{ github.repository }}"
           echo "Pulling $repo @ $branch"
 
-          # Piped in rather than passed as an argument so the password never
-          # appears in the guest's process list.
-          printf '%s' "$VM_PASSWORD" \
-            | ssh $SSH_OPTS tester@127.0.0.1 'umask 077; cat > ~/.become_pass'
+          # Written to a file inside the guest rather than passed as an argument,
+          # so the password never appears in the guest's process list.
+          #
+          # This is a vars file consumed via `-e @file`, NOT
+          # ANSIBLE_BECOME_PASSWORD_FILE / --become-password-file: those arrived
+          # in ansible-core 2.12, and Ubuntu 22.04 ships ansible 2.10.8, where
+          # they are silently ignored and every become task dies with
+          # "sudo: a password is required". `-e @file` works on every version.
+          printf 'ansible_become_password: "%s"\n' "$VM_PASSWORD" \
+            | ssh $SSH_OPTS tester@127.0.0.1 'umask 077; cat > ~/.become_vars.yml'
 
           # -C is essential: a bare `ansible-pull -U ...` checks out the repo's
           # default branch, so without it this would silently test master.
-          # ANSIBLE_BECOME_PASSWORD_FILE is the non-interactive equivalent of
-          # --ask-become-pass; ansible feeds it to `sudo -S` either way.
           ssh $SSH_OPTS tester@127.0.0.1 "
-            ANSIBLE_BECOME_PASSWORD_FILE=\$HOME/.become_pass \
-              ansible-pull -U '$repo' -C '$branch'
+            ansible-pull -U '$repo' -C '$branch' -e @\$HOME/.become_vars.yml
             rc=\$?
-            rm -f \$HOME/.become_pass
+            rm -f \$HOME/.become_vars.yml
             exit \$rc
           " 2>&1 | tee "$VM/ansible-pull.log"
 

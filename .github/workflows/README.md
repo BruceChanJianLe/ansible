@@ -72,6 +72,16 @@ callers are ~20 lines each and contain no logic, so the duplication is cosmetic.
 - **Badge URLs are pinned to a branch.** They carry `?branch=u26-test`. When
   this merges to master, update the query string in both the image URL and the
   link URL of every row, or the table will keep reporting a stale branch.
+- **The become password goes in via `-e @file`, and must stay that way.**
+  `--become-password-file` / `ANSIBLE_BECOME_PASSWORD_FILE` arrived in
+  ansible-core 2.12, but Ubuntu 22.04 ships ansible 2.10.8, where they are
+  silently ignored - every privileged task then fails with
+  "sudo: a password is required". The oldest supported target sets the floor
+  here; re-check this if the support window ever moves.
+- **`/dev/kvm` is not on every runner.** The hosted pool is not homogeneous, so
+  a job can land on a host without nested virtualisation and fail the very
+  first step in ~10s with a silent exit 1 (that is `test -w /dev/kvm`). Re-run
+  the job; it is a lottery, not a code change.
 - **`ansible-pull` fetches from github.com, not from the runner's checkout.**
   A fix has to be pushed before CI can test it. There is no way around this
   without abandoning `ansible-pull` as the thing under test.
