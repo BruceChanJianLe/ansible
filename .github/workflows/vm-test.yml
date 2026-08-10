@@ -46,21 +46,42 @@ jobs:
         -o LogLevel=ERROR
 
     steps:
-      - name: Enable KVM for the runner user
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
-            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
-          # Fail here rather than silently falling back to software emulation,
-          # which is ~20x slower and would just blow the job timeout instead.
-          test -w /dev/kvm
-
+      # Installed before KVM is enabled, not after: qemu-system-common ships its
+      # own udev rules for /dev/kvm, and letting it land afterwards can undo the
+      # permissions set below.
       - name: Install host tooling
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends \
             qemu-system-x86 qemu-utils cloud-image-utils ovmf
+
+      - name: Enable KVM for the runner user
+        run: |
+          set -euo pipefail
+
+          # Absent device is the one genuinely unrecoverable case: the runner has
+          # no nested virtualisation. Say so, instead of failing on a bare `test`.
+          if [ ! -e /dev/kvm ]; then
+            echo "::error::/dev/kvm does not exist - this runner cannot do nested virtualisation."
+            exit 1
+          fi
+
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          # `trigger` only queues the event; without `settle` the check below
+          # races udev applying MODE=0666 and intermittently fails in ~70ms.
+          sudo udevadm settle --timeout=30
+
+          # Backstop: the udev rule only matters if the node gets recreated.
+          # A direct chmod takes effect immediately and cannot race.
+          [ -w /dev/kvm ] || sudo chmod 0666 /dev/kvm
+
+          ls -l /dev/kvm
+          # Fail rather than silently falling back to software emulation, which
+          # is ~20x slower and would just blow the job timeout instead.
+          test -w /dev/kvm
 
       - name: Fetch the cloud image
         run: |

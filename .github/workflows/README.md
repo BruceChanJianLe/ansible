@@ -78,10 +78,16 @@ callers are ~20 lines each and contain no logic, so the duplication is cosmetic.
   silently ignored - every privileged task then fails with
   "sudo: a password is required". The oldest supported target sets the floor
   here; re-check this if the support window ever moves.
-- **`/dev/kvm` is not on every runner.** The hosted pool is not homogeneous, so
-  a job can land on a host without nested virtualisation and fail the very
-  first step in ~10s with a silent exit 1 (that is `test -w /dev/kvm`). Re-run
-  the job; it is a lottery, not a code change.
+- **Enabling KVM is a race unless you `udevadm settle`.** `/dev/kvm` starts as
+  `root:kvm 0660` and the runner user is not in the `kvm` group, so it must be
+  opened up. `udevadm trigger` merely queues the event, so a bare
+  `test -w /dev/kvm` immediately afterwards intermittently fails in ~70ms with
+  a silent exit 1. Hence `settle`, plus a direct `chmod` backstop that cannot
+  race, plus an explicit up-front check for the device being absent - which is
+  the one real "this runner has no nested virtualisation" case.
+  Order matters too: host tooling is installed **first**, because
+  `qemu-system-common` ships its own `/dev/kvm` udev rules and can otherwise
+  undo the permissions.
 - **`ansible-pull` fetches from github.com, not from the runner's checkout.**
   A fix has to be pushed before CI can test it. There is no way around this
   without abandoning `ansible-pull` as the thing under test.
