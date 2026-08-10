@@ -1,39 +1,41 @@
-# Boots a pristine Ubuntu cloud image under QEMU/KVM and runs the documented
-# `ansible-pull` one-liner inside it, as a normal user whose sudo asks for a
-# password. Containers are deliberately not used: the playbook installs snaps
-# (ghostty, nvim) and the multi-user nix daemon, both of which need a real
-# kernel and systemd.
+# Reusable workflow. Boots a pristine cloud image under QEMU/KVM and runs the
+# documented `ansible-pull` one-liner inside it, as a normal user whose sudo
+# asks for a password.
+#
+# Containers are deliberately not used: the playbook installs snaps and the
+# multi-user nix daemon, both of which need a real kernel and systemd.
+#
+# One caller workflow per target, so each target gets its own status badge -
+# see .github/workflows/README.md.
 ---
-name: ansible-pull on a fresh Ubuntu VM
+name: Reusable - ansible-pull in a VM
 
 on:
-  push:
-    branches: [u26-test]
-  workflow_dispatch:
+  workflow_call:
     inputs:
-      branch:
-        description: Branch to pull and test
-        default: u26-test
-  # Once this merges to master, add a weekly cron here. Everything this
-  # playbook installs comes from an unpinned upstream (nixos.org/nix/install,
-  # Brave's apt repo, the ghostty/nvim snap channels), so drift is the thing
-  # worth catching on a timer.
-  # schedule:
-  #   - cron: "0 3 * * 1"
+      label:
+        description: Human-readable target name, e.g. "Ubuntu 24.04"
+        required: true
+        type: string
+      distro:
+        description: ubuntu | arch - selects the admin group and the checks
+        required: true
+        type: string
+      image_url:
+        description: Cloud image to boot
+        required: true
+        type: string
+      image_url_fallback:
+        description: Used if image_url 404s (e.g. a release not yet published)
+        required: false
+        type: string
+        default: ""
 
 jobs:
   pull:
-    name: Ubuntu ${{ matrix.release }}
-    runs-on: ubuntu-24.04 # host only - the guest release is what is under test
+    name: ${{ inputs.label }}
+    runs-on: ubuntu-24.04 # host only - the guest is what is under test
     timeout-minutes: 90
-    strategy:
-      fail-fast: false # a red 24.04 must not cancel 26.04
-      matrix:
-        include:
-          - release: "24.04"
-            codename: noble
-          - release: "26.04"
-            codename: resolute
 
     env:
       VM: /mnt/vm
@@ -60,20 +62,17 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             qemu-system-x86 qemu-utils cloud-image-utils ovmf
 
-      - name: Fetch the Ubuntu ${{ matrix.release }} cloud image
+      - name: Fetch the cloud image
         run: |
           set -euo pipefail
           # /mnt is the runner's large ephemeral disk; / only has ~14 GB free,
-          # which a full apt upgrade plus brave plus nix plus two snaps exceeds.
+          # which a full upgrade plus brave plus nix plus the snaps exceeds.
           sudo mkdir -p "$VM"
           sudo chown "$USER" "$VM"
 
-          img="ubuntu-${{ matrix.release }}-server-cloudimg-amd64.img"
-          releases="https://cloud-images.ubuntu.com/releases/${{ matrix.release }}/release/$img"
-          daily="https://cloud-images.ubuntu.com/${{ matrix.codename }}/current/${{ matrix.codename }}-server-cloudimg-amd64.img"
-
-          curl -fL --retry 3 "$releases" -o "$VM/disk.qcow2" \
-            || curl -fL --retry 3 "$daily" -o "$VM/disk.qcow2"
+          curl -fL --retry 3 '${{ inputs.image_url }}' -o "$VM/disk.qcow2" \
+            || { [ -n '${{ inputs.image_url_fallback }}' ] \
+                 && curl -fL --retry 3 '${{ inputs.image_url_fallback }}' -o "$VM/disk.qcow2"; }
 
           qemu-img resize "$VM/disk.qcow2" +40G # cloud-init growpart expands root on boot
           qemu-img info "$VM/disk.qcow2"
@@ -81,6 +80,14 @@ jobs:
       - name: Seed cloud-init
         run: |
           set -euo pipefail
+          case '${{ inputs.distro }}' in
+            ubuntu) admin_group=sudo;  pkg_upgrade=false ;;
+            # Arch is rolling, so a partial upgrade is a real risk: bring the
+            # image fully up to date before the playbook touches pacman.
+            arch)   admin_group=wheel; pkg_upgrade=true ;;
+            *) echo "::error::unknown distro '${{ inputs.distro }}'"; exit 1 ;;
+          esac
+
           ssh-keygen -t ed25519 -N '' -q -f "$VM/id_vm"
 
           pw="$(openssl rand -hex 16)"
@@ -89,10 +96,10 @@ jobs:
 
           cat > "$VM/user-data" <<EOF
           #cloud-config
-          hostname: ubuntu-test
+          hostname: vm-test
           users:
             - name: tester
-              groups: [sudo]
+              groups: [$admin_group]
               shell: /bin/bash
               lock_passwd: false
               passwd: "$(openssl passwd -6 "$pw")"
@@ -100,15 +107,19 @@ jobs:
                 - $(cat "$VM/id_vm.pub")
           chpasswd:
             expire: false
+          write_files:
+            # Password-required, never NOPASSWD. Explicit rather than relying on
+            # the image's defaults, which differ between Ubuntu and Arch.
+            - path: /etc/sudoers.d/90-$admin_group
+              content: "%$admin_group ALL=(ALL:ALL) ALL\n"
+              permissions: "0440"
           package_update: true
+          package_upgrade: $pkg_upgrade
           # Exactly the bootstrap the README documents - nothing more, so a
           # missing dependency surfaces here instead of being papered over.
           packages: [ansible, git]
           EOF
 
-          # Note the absence of `sudo: ALL=(ALL) NOPASSWD:ALL` above. Membership
-          # of the sudo group alone means sudo prompts for a password, which is
-          # what makes this a real test of the --ask-become-pass path.
           cloud-localds "$VM/seed.iso" "$VM/user-data"
 
       - name: Boot the VM
@@ -151,7 +162,7 @@ jobs:
         timeout-minutes: 60
         run: |
           set -euo pipefail
-          branch="${{ inputs.branch || github.ref_name }}"
+          branch="${{ github.ref_name }}"
           repo="https://github.com/${{ github.repository }}"
           echo "Pulling $repo @ $branch"
 
@@ -172,19 +183,21 @@ jobs:
             exit \$rc
           " 2>&1 | tee "$VM/ansible-pull.log"
 
-      - name: Verify ghostty, brave and nix
+      - name: Verify installed programs
         run: |
           set -euo pipefail
+          case '${{ inputs.distro }}' in
+            ubuntu)
+              checks='snap list ghostty && /snap/bin/ghostty --version && infocmp -x xterm-ghostty >/dev/null && brave-browser --version && nix --version' ;;
+            # No brave on Arch: it is commented out of
+            # setup-additional-Archlinux.yml in favour of building it with paru.
+            arch)
+              checks='ghostty --version && nix --version && command -v spotify-launcher' ;;
+          esac
+
           # A fresh login shell, so anything the run added to the environment
           # (notably nix's /etc/profile.d/nix.sh) has to actually work.
-          ssh $SSH_OPTS tester@127.0.0.1 'bash -lc "
-            set -exo pipefail
-            snap list ghostty
-            /snap/bin/ghostty --version
-            infocmp -x xterm-ghostty > /dev/null
-            brave-browser --version
-            nix --version
-          "'
+          ssh $SSH_OPTS tester@127.0.0.1 "bash -lc 'set -ex; $checks'"
 
       - name: Collect the guest journal
         if: failure()
@@ -197,7 +210,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: vm-logs-${{ matrix.release }}
+          name: vm-logs-${{ inputs.distro }}-${{ inputs.label }}
           path: |
             /mnt/vm/serial.log
             /mnt/vm/ansible-pull.log

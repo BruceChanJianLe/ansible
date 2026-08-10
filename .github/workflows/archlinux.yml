@@ -1,0 +1,19 @@
+# Status-badge target for Arch Linux. All logic lives in vm-test.yml.
+# Arch is rolling, so there is no version to pin - the image is always latest.
+# Read .github/workflows/README.md before adding or removing a target.
+---
+name: Arch Linux
+
+on:
+  push:
+    branches: [u26-test]
+    paths-ignore: ["**.md", LICENSE]
+  workflow_dispatch:
+
+jobs:
+  vm:
+    uses: ./.github/workflows/vm-test.yml
+    with:
+      label: Arch Linux
+      distro: arch
+      image_url: https://geo.mirror.pkgbuild.com/images/latest/Arch-Linux-x86_64-cloudimg.qcow2

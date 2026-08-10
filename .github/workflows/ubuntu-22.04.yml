@@ -1,0 +1,19 @@
+# Status-badge target for Ubuntu 22.04 LTS. All logic lives in vm-test.yml.
+# Read .github/workflows/README.md before adding or removing a target.
+---
+name: Ubuntu 22.04
+
+on:
+  push:
+    branches: [u26-test]
+    paths-ignore: ["**.md", LICENSE]
+  workflow_dispatch:
+
+jobs:
+  vm:
+    uses: ./.github/workflows/vm-test.yml
+    with:
+      label: Ubuntu 22.04
+      distro: ubuntu
+      image_url: https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img
+      image_url_fallback: https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
