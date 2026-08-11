@@ -1,6 +1,6 @@
 - name: Check .bashrc exists
   ansible.builtin.stat:
-    path: "{{ ansible_env.HOME }}/.bashrc"
+    path: "{{ ansible_env['env']['HOME'] }}/.bashrc"
   register: brc
   tags:
   - setup
