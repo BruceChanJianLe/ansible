@@ -1,5 +1,5 @@
 ---
-- include_tasks: tasks/nix.yml
+- include_tasks: tasks/nix-darwin.yml
   tags: [nix, additional]
 - include_tasks: tasks/ghostty-darwin.yml
   tags: [ghostty, additional]

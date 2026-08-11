@@ -19,12 +19,10 @@
     - nix
     - additional
 
-# ansible.builtin.expect below needs pexpect on the target. The Debian ansible
-# package happens to pull it in; Arch's does not, so install it explicitly.
-- name: Install pexpect, required by the Nix installer task
-  become: yes
-  ansible.builtin.package:
-    name: "{{ 'python3-pexpect' if ansible_facts['os_family'] == 'Debian' else 'python-pexpect' }}"
+- name: Create venv and install pexpect for Nix installer task
+  ansible.builtin.shell: |
+    python3 -m venv /tmp/ansible-venv
+    /tmp/ansible-venv/bin/pip install pexpect
   when: nix_installed.rc != 0
   tags:
     - setup
@@ -33,12 +31,13 @@
 
 - name: Run Nix installer interactively
   ansible.builtin.expect:
-    command: "bash /tmp/nix-install.sh --daemon"
+    command: "bash /tmp/nix-install.sh"
     responses:
       "\\[y/n\\]": "y"
       "Nix won't work in active shell sessions until you restart them.": ""
-      "I don't support your init system yet; you may want to add nix-daemon manually.": ""
     timeout: 600
+  vars:
+    ansible_python_interpreter: /tmp/ansible-venv/bin/python
   become: yes
   when: nix_installed.rc != 0
   tags:
@@ -46,10 +45,13 @@
     - nix
     - additional
 
-- name: Remove Nix installer script
+- name: Remove Nix installer script and venv
   ansible.builtin.file:
-    path: /tmp/nix-install.sh
+    path: "{{ item }}"
     state: absent
+  loop:
+    - /tmp/nix-install.sh
+    - /tmp/ansible-venv
   when: nix_installed.rc != 0
   tags:
     - setup
