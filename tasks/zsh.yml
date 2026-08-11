@@ -1,22 +1,32 @@
 - name: Clone zsh
   ansible.builtin.git:
     repo: 'https://github.com/brucechanjianle/zsh.git'
-    dest: "{{ ansible_env.HOME }}/.config/zsh"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.config/zsh"
     version: "{{ dotfile_branch }}"
   tags:
     - setup
     - zsh
 
-- name: Install zsh
-  shell: "{{ ansible_env.HOME }}/.config/zsh/install_zsh.bash -a true"
+- name: Install zsh and friends
+  become: yes
+  apt:
+    name:
+      - zsh
+      - zsh-syntax-highlighting
   tags:
     - setup
     - zsh
 
-# Channge to zsh from ghostty config
+- name: Install zsh
+  shell: "{{ ansible_facts['env']['HOME'] }}/.config/zsh/install_zap.bash -a true"
+  tags:
+    - setup
+    - zsh
+
+# Change to zsh from ghostty config
 # - name: Change shell to zsh
 #   become: yes
-#   shell: sudo chsh -s $(which zsh)
+#   shell: chsh -s $(which zsh) $USER
 #   tags:
 #     - setup
 #     - zsh
@@ -24,7 +34,7 @@
 # zsh history
 - name: Create zsh cache directory if it doesn't exist
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/.cache/zsh"
+    path: "{{ ansible_facts['env']['HOME'] }}/.cache/zsh"
     state: directory
     mode: '0755'
   tags:
@@ -33,7 +43,7 @@
 
 - name: Ensure zsh history file exists
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/.cache/zsh/history"
+    path: "{{ ansible_facts['env']['HOME'] }}/.cache/zsh/history"
     state: touch
   tags:
     - setup
@@ -57,7 +67,7 @@
 - name: Trigger zap plugin cloning by running zsh once
   ansible.builtin.shell:
     cmd: zsh -i -c 'exit' </dev/null
-    creates: "{{ ansible_env.HOME }}/.local/share/zap/plugins"
+    creates: "{{ ansible_facts['env']['HOME'] }}/.local/share/zap/plugins"
   ignore_errors: true
   tags:
     - setup

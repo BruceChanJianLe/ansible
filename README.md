@@ -1,3 +1,16 @@
+<details>
+<summary><strong>Supported OS</strong></summary>
+
+| OS         | Version   | `ansible-pull` on `u26-test`                                                                                                                                                                                              |
+| ---------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ubuntu     | 22.04 LTS | [![Ubuntu 22.04](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-22.04.yml/badge.svg?branch=u26-test)](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-22.04.yml?query=branch%3Au26-test) |
+| Ubuntu     | 24.04 LTS | [![Ubuntu 24.04](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-24.04.yml/badge.svg?branch=u26-test)](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-24.04.yml?query=branch%3Au26-test) |
+| Ubuntu     | 26.04 LTS | [![Ubuntu 26.04](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-26.04.yml/badge.svg?branch=u26-test)](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-26.04.yml?query=branch%3Au26-test) |
+| Arch Linux | rolling   | [![Arch Linux](https://github.com/brucechanjianle/ansible/actions/workflows/archlinux.yml/badge.svg?branch=u26-test)](https://github.com/brucechanjianle/ansible/actions/workflows/archlinux.yml?query=branch%3Au26-test)         |
+| macOS      | -         | not supported - see the `macos` branch                                                                                                                                                                                       |
+
+</details>
+
 > This script is a quick way to setup your brand new laptop,
 > or your docker containers in a swift manner. It currently supports
 > Ubuntu, Arch, and macOS!

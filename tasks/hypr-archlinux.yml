@@ -10,7 +10,7 @@
 # Clone hyprland config
 - name: Check if hypr directory is empty
   find:
-    paths: "{{ ansible_env.HOME }}/.config/hypr"
+    paths: "{{ ansible_facts['env']['HOME'] }}/.config/hypr"
     file_type: any
   register: hypr_contents
   tags:
@@ -19,7 +19,7 @@
 - name: Clone hypr config repo if dir is empty
   git:
     repo: 'https://github.com/brucechanjianle/hypr.git'
-    dest: "{{ ansible_env.HOME }}/.config/hypr"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.config/hypr"
     force: yes
   when: hypr_contents.matched == 0
   tags:

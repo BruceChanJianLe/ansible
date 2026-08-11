@@ -12,8 +12,8 @@
 # yay (Yet Another Yaourt), AUR (Arch User Repository)
 - name: Define yay repository directory
   ansible.builtin.set_fact:
-    yay_repo_dir: "{{ ansible_env.HOME }}/reference/yay.git"
-    yay_repo_master_branch_dir: "{{ ansible_env.HOME }}/reference/yay.git/master"
+    yay_repo_dir: "{{ ansible_facts['env']['HOME'] }}/reference/yay.git"
+    yay_repo_master_branch_dir: "{{ ansible_facts['env']['HOME'] }}/reference/yay.git/master"
   tags:
     - setup
     - yay
@@ -28,7 +28,7 @@
 
 - name: Create reference directory
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/reference"
+    path: "{{ ansible_facts['env']['HOME'] }}/reference"
     state: directory
   when: not yay_repo_stat.stat.exists
   tags:
