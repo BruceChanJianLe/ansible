@@ -36,9 +36,8 @@
     - additional
 
 - name: Install pexpect on macOS, required by the Nix installer task
-  ansible.builtin.pip:
-    name: pexpect
-    executable: pip3
+  ansible.builtin.command:
+    cmd: pip3 install pexpect
   when: nix_installed.rc != 0 and ansible_facts['os_family'] == 'Darwin'
   tags:
     - setup
