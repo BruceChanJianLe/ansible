@@ -21,11 +21,12 @@ which need a real kernel and systemd.
 
 ## Layout
 
-| File                | Role                                                    |
-| ------------------- | ------------------------------------------------------- |
-| `vm-test.yml`       | Reusable (`workflow_call`). All the logic lives here.    |
-| `ubuntu-<ver>.yml`  | Thin caller, one per Ubuntu release.                     |
-| `archlinux.yml`     | Thin caller for Arch.                                    |
+| File                | Role                                                                        |
+| ------------------- | --------------------------------------------------------------------------- |
+| `vm-test.yml`       | Reusable (`workflow_call`). All the Linux VM logic lives here.              |
+| `ubuntu-<ver>.yml`  | Thin caller, one per Ubuntu release.                                        |
+| `archlinux.yml`     | Thin caller for Arch.                                                       |
+| `macos.yml`         | Standalone macOS workflow. Runs `ansible-pull` directly on `macos-latest`. |
 
 **Why one file per target instead of one matrix job:** a GitHub status badge is
 scoped to a workflow *file*, not to a matrix leg. A single matrixed workflow can
@@ -60,12 +61,11 @@ callers are ~20 lines each and contain no logic, so the duplication is cosmetic.
   Arch does *not* install brave: it is commented out of
   `setup-additional-Archlinux.yml` in favour of building `brave-bin` with paru,
   so the Arch checks assert ghostty, nix and spotify-launcher only.
-- **macOS: unsupported, no workflow.** The Darwin task files live on the
-  `macos` branch and have never been merged. Note that this VM approach would
-  not transfer: GitHub's macOS runners do not expose nested virtualisation, so
-  a macOS target would have to run `ansible-pull` directly on a `macos-*`
-  runner, which is a different design. Leave the README row as "not supported"
-  until that work is actually done.
+- **macOS: `macos-latest` runner, no VM.** GitHub's macOS runners do not
+  expose nested virtualisation, so `macos.yml` runs `ansible-pull` directly
+  on the runner instead of inside QEMU. The runner user has passwordless sudo,
+  so no become-password setup is needed. The workflow lives on the `macos`
+  branch and triggers on pushes to that branch.
 
 ## Gotchas
 
