@@ -19,13 +19,27 @@
     - nix
     - additional
 
-# ansible.builtin.expect below needs pexpect on the target. The Debian ansible
-# package happens to pull it in; Arch's does not, so install it explicitly.
+# ansible.builtin.expect below needs pexpect on the target. Debian pulls it in
+# via the ansible package; Arch and macOS do not, so install it explicitly.
 - name: Install pexpect, required by the Nix installer task
-  become: yes
+  vars:
+    pexpect_pkg:
+      Debian: python3-pexpect
+      Archlinux: python-pexpect
+  become: "{{ ansible_facts['os_family'] != 'Darwin' }}"
   ansible.builtin.package:
-    name: "{{ 'python3-pexpect' if ansible_facts['os_family'] == 'Debian' else 'python-pexpect' }}"
-  when: nix_installed.rc != 0
+    name: "{{ pexpect_pkg[ansible_facts['os_family']] }}"
+  when: nix_installed.rc != 0 and ansible_facts['os_family'] in pexpect_pkg
+  tags:
+    - setup
+    - nix
+    - additional
+
+- name: Install pexpect on macOS, required by the Nix installer task
+  ansible.builtin.pip:
+    name: pexpect
+    executable: pip3
+  when: nix_installed.rc != 0 and ansible_facts['os_family'] == 'Darwin'
   tags:
     - setup
     - nix
