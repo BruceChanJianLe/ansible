@@ -37,6 +37,6 @@ jobs:
           bash -lc 'set -ex
             nvim --version | head -n1
             tmux -V
-            ghostty --version
+            /Applications/Ghostty.app/Contents/MacOS/ghostty --version
             nix --version
           '
