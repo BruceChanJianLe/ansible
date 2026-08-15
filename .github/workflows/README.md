@@ -74,6 +74,18 @@ callers are ~20 lines each and contain no logic, so the duplication is cosmetic.
   query strings say `macos-test`. They must agree: retarget the triggers
   without repointing the badges and the table silently reports another branch.
   Both need updating whenever this content moves to a different branch.
+- **Arch must never bootstrap through cloud-init.** cloud-init is a Python
+  program. On a rolling release its `package_upgrade` pulls in a new `python`
+  (and a new `cloud-init`) and replaces them *underneath the running process*
+  mid-boot; anything Python launched during that window dies with
+  `LookupError: no codec search functions registered`. That is why Arch gets
+  its own `Bootstrap Arch` step running `pacman -Syu --noconfirm --needed
+  ansible git` over SSH after cloud-init has finished - one transaction, never
+  `-Sy` followed by an install, and driven by pacman, which is C and can
+  therefore replace python without breaking itself.
+- **Wait on `/var/lib/cloud/instance/boot-finished`, not `cloud-init status
+  --wait`.** sshd is up long before cloud-init finishes, and that CLI is Python,
+  so it hits the same trap as above. The marker file is pure filesystem.
 - **The become password goes in via `-e @file`, and must stay that way.**
   `--become-password-file` / `ANSIBLE_BECOME_PASSWORD_FILE` arrived in
   ansible-core 2.12, but Ubuntu 22.04 ships ansible 2.10.8, where they are

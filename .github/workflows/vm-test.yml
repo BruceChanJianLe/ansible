@@ -102,10 +102,8 @@ jobs:
         run: |
           set -euo pipefail
           case '${{ inputs.distro }}' in
-            ubuntu) admin_group=sudo;  pkg_upgrade=false ;;
-            # Arch is rolling, so a partial upgrade is a real risk: bring the
-            # image fully up to date before the playbook touches pacman.
-            arch)   admin_group=wheel; pkg_upgrade=true ;;
+            ubuntu) admin_group=sudo ;;
+            arch)   admin_group=wheel ;;
             *) echo "::error::unknown distro '${{ inputs.distro }}'"; exit 1 ;;
           esac
 
@@ -134,14 +132,23 @@ jobs:
             - path: /etc/sudoers.d/90-$admin_group
               content: "%$admin_group ALL=(ALL:ALL) ALL\n"
               permissions: "0440"
+          EOF
+
+          # Ubuntu bootstraps through cloud-init. Arch deliberately does not:
+          # cloud-init is itself a Python program, and on a rolling release a
+          # `pacman -Su` replaces python (and cloud-init) underneath the running
+          # process mid-boot. Arch bootstraps in its own step further down.
+          if [ '${{ inputs.distro }}' != arch ]; then
+            cat >> "$VM/user-data" <<'EOF'
           package_update: true
-          package_upgrade: $pkg_upgrade
           # Exactly the bootstrap the README documents - nothing more, so a
           # missing dependency surfaces here instead of being papered over.
           packages: [ansible, git]
           EOF
+          fi
 
           cloud-localds "$VM/seed.iso" "$VM/user-data"
+          cat "$VM/user-data"
 
       - name: Boot the VM
         run: |
@@ -176,7 +183,39 @@ jobs:
       - name: Wait for cloud-init to finish
         run: |
           set -euo pipefail
-          ssh $SSH_OPTS tester@127.0.0.1 'cloud-init status --wait'
+          # Poll the marker file rather than `cloud-init status --wait`. sshd
+          # comes up long before cloud-init finishes, and that CLI is a Python
+          # program: on Arch it gets invoked while pacman is mid-transaction
+          # replacing python, and dies with "no codec search functions
+          # registered". The marker is pure filesystem and cannot race.
+          for _ in $(seq 1 90); do
+            if ssh $SSH_OPTS tester@127.0.0.1 'test -f /var/lib/cloud/instance/boot-finished' 2>/dev/null; then
+              echo "cloud-init finished."
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::cloud-init did not finish within 15 minutes"
+          tail -n 100 "$VM/serial.log"
+          exit 1
+
+      - name: Bootstrap Arch
+        if: inputs.distro == 'arch'
+        run: |
+          set -euo pipefail
+          # One transaction: a full -Syu plus the packages, exactly as the
+          # README tells an Arch user to do it. Never `-Sy` then install, which
+          # is a partial upgrade. pacman is a C program, so it can replace
+          # python without breaking itself - which is precisely why this cannot
+          # live in cloud-init.
+          printf '%s\n' "$VM_PASSWORD" | ssh $SSH_OPTS tester@127.0.0.1 \
+            'sudo -S -p "" pacman -Syu --noconfirm --needed ansible git'
+
+      # Its own step so it runs for every distro and, crucially, only once the
+      # Arch bootstrap above has actually installed ansible.
+      - name: Show guest environment
+        run: |
+          set -euo pipefail
           ssh $SSH_OPTS tester@127.0.0.1 '. /etc/os-release; echo "$PRETTY_NAME"; ansible --version | head -n1; git --version'
 
       - name: ansible-pull
