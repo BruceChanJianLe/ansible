@@ -8,7 +8,7 @@ name: macOS
 
 on:
   push:
-    branches: [macos]
+    branches: [macos-test]
     paths-ignore: ["**.md", LICENSE]
   workflow_dispatch:
 

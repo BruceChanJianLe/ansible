@@ -5,7 +5,7 @@ name: Ubuntu 24.04
 
 on:
   push:
-    branches: [u26-test]
+    branches: [macos-test]
     paths-ignore: ["**.md", LICENSE]
   workflow_dispatch:
 

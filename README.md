@@ -1,13 +1,13 @@
 <details>
 <summary><strong>Supported OS</strong></summary>
 
-| OS         | Version   | `ansible-pull` on `u26-test`                                                                                                                                                                                              |
+| OS         | Version   | `ansible-pull` on `macos-test`                                                                                                                                                                                              |
 | ---------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Ubuntu     | 22.04 LTS | [![Ubuntu 22.04](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-22.04.yml/badge.svg?branch=u26-test)](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-22.04.yml?query=branch%3Au26-test) |
-| Ubuntu     | 24.04 LTS | [![Ubuntu 24.04](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-24.04.yml/badge.svg?branch=u26-test)](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-24.04.yml?query=branch%3Au26-test) |
-| Ubuntu     | 26.04 LTS | [![Ubuntu 26.04](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-26.04.yml/badge.svg?branch=u26-test)](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-26.04.yml?query=branch%3Au26-test) |
-| Arch Linux | rolling   | [![Arch Linux](https://github.com/brucechanjianle/ansible/actions/workflows/archlinux.yml/badge.svg?branch=u26-test)](https://github.com/brucechanjianle/ansible/actions/workflows/archlinux.yml?query=branch%3Au26-test)         |
-| macOS      | latest    | [![macOS](https://github.com/brucechanjianle/ansible/actions/workflows/macos.yml/badge.svg?branch=macos)](https://github.com/brucechanjianle/ansible/actions/workflows/macos.yml?query=branch%3Amacos) |
+| Ubuntu     | 22.04 LTS | [![Ubuntu 22.04](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-22.04.yml/badge.svg?branch=macos-test)](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-22.04.yml?query=branch%3Amacos-test) |
+| Ubuntu     | 24.04 LTS | [![Ubuntu 24.04](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-24.04.yml/badge.svg?branch=macos-test)](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-24.04.yml?query=branch%3Amacos-test) |
+| Ubuntu     | 26.04 LTS | [![Ubuntu 26.04](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-26.04.yml/badge.svg?branch=macos-test)](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-26.04.yml?query=branch%3Amacos-test) |
+| Arch Linux | rolling   | [![Arch Linux](https://github.com/brucechanjianle/ansible/actions/workflows/archlinux.yml/badge.svg?branch=macos-test)](https://github.com/brucechanjianle/ansible/actions/workflows/archlinux.yml?query=branch%3Amacos-test)         |
+| macOS      | latest    | [![macOS](https://github.com/brucechanjianle/ansible/actions/workflows/macos.yml/badge.svg?branch=macos-test)](https://github.com/brucechanjianle/ansible/actions/workflows/macos.yml?query=branch%3Amacos-test) |
 
 </details>
 

@@ -64,14 +64,16 @@ callers are ~20 lines each and contain no logic, so the duplication is cosmetic.
 - **macOS: `macos-latest` runner, no VM.** GitHub's macOS runners do not
   expose nested virtualisation, so `macos.yml` runs `ansible-pull` directly
   on the runner instead of inside QEMU. The runner user has passwordless sudo,
-  so no become-password setup is needed. The workflow lives on the `macos`
-  branch and triggers on pushes to that branch.
+  so no become-password setup is needed. It is a peer of the Linux callers, not
+  a caller of `vm-test.yml`, because there is no VM to boot.
 
 ## Gotchas
 
-- **Badge URLs are pinned to a branch.** They carry `?branch=u26-test`. When
-  this merges to master, update the query string in both the image URL and the
-  link URL of every row, or the table will keep reporting a stale branch.
+- **Everything is pinned to one branch, in two places.** On this branch the
+  five `push.branches` lists and all five badge `?branch=` / `?query=branch%3A`
+  query strings say `macos-test`. They must agree: retarget the triggers
+  without repointing the badges and the table silently reports another branch.
+  Both need updating whenever this content moves to a different branch.
 - **The become password goes in via `-e @file`, and must stay that way.**
   `--become-password-file` / `ANSIBLE_BECOME_PASSWORD_FILE` arrived in
   ansible-core 2.12, but Ubuntu 22.04 ships ansible 2.10.8, where they are

@@ -6,7 +6,7 @@ name: Arch Linux
 
 on:
   push:
-    branches: [u26-test]
+    branches: [macos-test]
     paths-ignore: ["**.md", LICENSE]
   workflow_dispatch:
 
