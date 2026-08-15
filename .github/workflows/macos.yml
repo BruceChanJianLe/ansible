@@ -1,0 +1,46 @@
+# macOS cannot use vm-test.yml: GitHub's macOS runners do not expose nested
+# virtualisation, so ansible-pull runs directly on the runner instead of inside
+# a QEMU VM. The runner user has passwordless sudo, so no become-password setup
+# is needed.
+# Read .github/workflows/README.md before adding or removing a target.
+---
+name: macOS
+
+on:
+  # Weekly regression run, not per-push: master is the released state, and the
+  # branch-level workflows already give fast feedback before anything lands here.
+  # GitHub cron is always UTC - this is Friday 20:00 SGT.
+  # NOTE: `schedule` only ever fires on the default branch. That is why these
+  # triggers can only work once this content is on master.
+  schedule:
+    - cron: "0 12 * * 5"
+  workflow_dispatch:
+
+jobs:
+  pull:
+    name: macOS
+    runs-on: macos-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Install ansible
+        run: brew install ansible
+
+      - name: ansible-pull
+        timeout-minutes: 60
+        run: |
+          set -euo pipefail
+          branch="${{ github.ref_name }}"
+          repo="https://github.com/${{ github.repository }}"
+          echo "Pulling $repo @ $branch"
+          ansible-pull -U "$repo" -C "$branch"
+
+      - name: Verify installed programs
+        run: |
+          set -euo pipefail
+          bash -lc 'set -ex
+            nvim --version | head -n1
+            tmux -V
+            /Applications/Ghostty.app/Contents/MacOS/ghostty --version
+            nix --version
+          '

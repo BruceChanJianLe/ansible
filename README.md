@@ -1,3 +1,9 @@
+[![macOS](https://github.com/brucechanjianle/ansible/actions/workflows/macos.yml/badge.svg?branch=master)](https://github.com/brucechanjianle/ansible/actions/workflows/macos.yml?query=branch%3Amaster)
+[![Arch Linux](https://github.com/brucechanjianle/ansible/actions/workflows/archlinux.yml/badge.svg?branch=master)](https://github.com/brucechanjianle/ansible/actions/workflows/archlinux.yml?query=branch%3Amaster)
+[![Ubuntu 26.04](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-26.04.yml/badge.svg?branch=master)](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-26.04.yml?query=branch%3Amaster)
+[![Ubuntu 24.04](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-24.04.yml/badge.svg?branch=master)](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-24.04.yml?query=branch%3Amaster)
+[![Ubuntu 22.04](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-22.04.yml/badge.svg?branch=master)](https://github.com/brucechanjianle/ansible/actions/workflows/ubuntu-22.04.yml?query=branch%3Amaster)
+
 > This script is a quick way to setup your brand new laptop,
 > or your docker containers in a swift manner. It currently supports
 > Ubuntu, Arch, and macOS!

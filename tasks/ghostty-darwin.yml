@@ -9,7 +9,7 @@
 
 - name: Check if ghostty directory is empty
   find:
-    paths: "{{ ansible_env.HOME }}/.config/ghostty"
+    paths: "{{ ansible_facts['env']['HOME'] }}/.config/ghostty"
     file_type: any
   register: ghostty_contents
   tags:
@@ -20,7 +20,7 @@
 - name: Clone ghostty config repo if dir is empty
   git:
     repo: 'https://github.com/brucechanjianle/ghostty.git'
-    dest: "{{ ansible_env.HOME }}/.config/ghostty"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.config/ghostty"
     force: yes
   when: ghostty_contents.matched == 0
   tags:

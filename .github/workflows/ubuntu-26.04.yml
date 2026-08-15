@@ -1,0 +1,19 @@
+# Status-badge target for Ubuntu 26.04 LTS. All logic lives in vm-test.yml.
+# Read .github/workflows/README.md before adding or removing a target.
+---
+name: Ubuntu 26.04
+
+on:
+  # Every Friday 20:00 SGT
+  schedule:
+    - cron: "0 12 * * 5"
+  workflow_dispatch:
+
+jobs:
+  vm:
+    uses: ./.github/workflows/vm-test.yml
+    with:
+      label: Ubuntu 26.04
+      distro: ubuntu
+      image_url: https://cloud-images.ubuntu.com/releases/26.04/release/ubuntu-26.04-server-cloudimg-amd64.img
+      image_url_fallback: https://cloud-images.ubuntu.com/resolute/current/resolute-server-cloudimg-amd64.img
