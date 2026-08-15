@@ -15,14 +15,15 @@
 - name: Clone nvim
   ansible.builtin.git:
     repo: 'https://github.com/brucechanjianle/nvim.git'
-    dest: "{{ ansible_env.HOME }}/.config/nvim"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.config/nvim"
   tags:
     - setup
     - nvim
 
 - name: Install nvim plugins
   become: no
-  shell: nvim --headless -c 'autocmd User LazySync quitall' -c 'Lazy sync'
+  shell: 'nvim --headless "+Lazy! sync" +qa > /dev/null 2>&1'
+  ignore_errors: true
   tags:
     - setup
     - nvim

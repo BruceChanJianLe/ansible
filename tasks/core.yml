@@ -34,7 +34,7 @@
   become: yes
   apt:
     name: software-properties-common
-  when: not (ansible_distribution == "Debian" and ansible_distribution_major_version == "13")
+  when: not (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] == "13")
   tags:
     - setup
     - core
