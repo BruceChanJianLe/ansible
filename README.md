@@ -43,6 +43,18 @@ sudo pacman -S ansible git --noconfirm
 brew install ansible git
 ```
 
+The nix way!  
+```bash
+curl -fsSL https://install.determinate.systems/nix | sh -s -- install
+. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+```
+
+One liner!  
+```bash
+nix-shell -p ansible git --run \
+    'ANSIBLE_ASK_VAULT_PASS=True ansible-pull -U https://github.com/brucechanjianle/ansible --ask-vault-pass -e "decrypt_cjl=true" --ask-become-pass -C macos-nix'
+```
+
 # Setting Up New Laptop
 
 ## Full Setup without decryption
