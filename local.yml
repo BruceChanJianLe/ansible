@@ -43,6 +43,7 @@
     community.general.homebrew:
       update_homebrew: true
     when: ansible_facts['os_family'] == "Darwin"
+    ignore_errors: true
 
   tasks:
     - include_tasks: setup-Debian.yml
@@ -68,3 +69,7 @@
     - include_tasks: setup-additional-Darwin.yml
       when: ansible_facts['os_family'] == "Darwin"
       tags: [nix, ghostty, additional]
+
+    - include_tasks: setup-nix-Darwin.yml
+      when: ansible_facts['os_family'] == "Darwin"
+      tags: [never, nix_darwin]
