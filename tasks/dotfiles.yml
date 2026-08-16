@@ -12,7 +12,7 @@
     dest: "{{ ansible_facts['env']['HOME'] }}/.bashrc.ori"
     mode: 0664
     decrypt: false
-  when: brc.stat.exists
+  when: not nix_darwin_run and brc.stat.exists
   tags:
   - setup
   - dotfiles
@@ -31,7 +31,7 @@
     dest: "{{ ansible_facts['env']['HOME'] }}/.bash_aliases.ori"
     mode: 0664
     decrypt: false
-  when: bal.stat.exists
+  when: not nix_darwin_run and bal.stat.exists
   tags:
   - setup
   - dotfiles
@@ -67,7 +67,7 @@
     dest: "{{ ansible_facts['env']['HOME'] }}/.bashrc"
     mode: 0664
     decrypt: false
-  when: use_zsh and brc.stat.exists
+  when: not nix_darwin_run and use_zsh and brc.stat.exists
   tags:
   - setup
   - dotfiles
@@ -78,7 +78,44 @@
     dest: "{{ ansible_facts['env']['HOME'] }}/.bash_aliases"
     mode: 0664
     decrypt: false
-  when: use_zsh and bal.stat.exists
+  when: not nix_darwin_run and use_zsh and bal.stat.exists
   tags:
   - setup
   - dotfiles
+
+- name: Check the nix-darwin flake arrived
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.config/nix-darwin/flake.nix"
+  register: nix_darwin_flake
+  when: nix_darwin_run
+  tags:
+  - never
+  - nix_darwin
+
+- name: Fail early if the flake is missing
+  ansible.builtin.fail:
+    msg: >
+      {{ ansible_facts['env']['HOME'] }}/.config/nix-darwin/flake.nix is absent.
+      It must be tracked by the dotfiles repo (config add ~/.config/nix-darwin)
+      for the checkout above to deliver it.
+  when: nix_darwin_run and not nix_darwin_flake.stat.exists
+  tags:
+  - never
+  - nix_darwin
+
+# sudo nix run nix-darwin -- switch --flake ~/.config/nix-darwin#<user>
+- name: Activate nix-darwin
+  become: yes
+  ansible.builtin.command:
+    argv:
+      - nix
+      - run
+      - nix-darwin
+      - --
+      - switch
+      - --flake
+      - "{{ ansible_facts['env']['HOME'] }}/.config/nix-darwin#{{ ansible_facts['env']['USER'] }}"
+  when: nix_darwin_run
+  tags:
+  - never
+  - nix_darwin
