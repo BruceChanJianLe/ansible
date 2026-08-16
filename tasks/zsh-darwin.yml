@@ -12,6 +12,7 @@
     name:
       - fzf
     state: present
+  when: not nix_darwin_run
   tags:
     - setup
     - zsh
