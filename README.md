@@ -52,7 +52,7 @@ curl -fsSL https://install.determinate.systems/nix | sh -s -- install
 One liner!  
 ```bash
 nix-shell -p ansible git --run \
-    'ANSIBLE_ASK_VAULT_PASS=True ansible-pull -U https://github.com/brucechanjianle/ansible --ask-vault-pass -e "decrypt_cjl=true" --ask-become-pass -C macos-nix'
+    'ANSIBLE_ASK_VAULT_PASS=True ansible-pull -U https://github.com/brucechanjianle/ansible --ask-vault-pass -e "decrypt_cjl=true" --tags nix_darwin --ask-become-pass -C macos-nix'
 ```
 
 # Setting Up New Laptop
