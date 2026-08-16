@@ -2,6 +2,7 @@
   community.general.homebrew_cask:
     name: ghostty
     state: present
+  when: not nix_darwin_run
   tags:
     - setup
     - ghostty
