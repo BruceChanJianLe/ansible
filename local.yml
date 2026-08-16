@@ -22,6 +22,12 @@
       ansible_become_exe: "{{ '/usr/bin/sudo.ws' if sudo_ws.stat.exists else '/usr/bin/sudo' }}"
     tags: always
 
+  - name: Detect whether this is a nix_darwin run
+    become: false
+    ansible.builtin.set_fact:
+      nix_darwin_run: "{{ 'nix_darwin' in ansible_run_tags }}"
+    tags: always
+
   - name: Update Apt
     become: true
     apt:
