@@ -7,6 +7,7 @@
       - luarocks
       - imagemagick
     state: present
+  when: not nix_darwin_run
   tags:
     - setup
     - nvim
@@ -15,6 +16,7 @@
   community.general.homebrew:
     name: virtualenv
     state: present
+  when: not nix_darwin_run
   tags:
     - setup
     - nvim
