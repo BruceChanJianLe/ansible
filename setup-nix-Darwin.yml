@@ -1,0 +1,17 @@
+---
+- import_tasks: tasks/dotfiles.yml
+  tags: [dotfiles, nix_darwin]
+- import_tasks: tasks/ssh.yml
+  tags: [dotfiles, ssh, nix_darwin]
+- import_tasks: tasks/base16.yml
+  tags: [base16, nix_darwin]
+- import_tasks: tasks/nvim-darwin.yml
+  tags: [nvim, nix_darwin]
+- import_tasks: tasks/tmux-darwin.yml
+  tags: [tmux, nix_darwin]
+- import_tasks: tasks/zsh-darwin.yml
+  tags: [zsh, nix_darwin]
+- import_tasks: tasks/p-aliases.yml
+  tags: [private_aliases, nix_darwin]
+- import_tasks: tasks/ghostty-darwin.yml
+  tags: [ghostty, nix_darwin]
