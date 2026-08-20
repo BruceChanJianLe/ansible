@@ -10,21 +10,13 @@
 
 # Quick Start
 
-**1. Install dependencies**
+**1. Install Prerequisite**
 
 | OS     | Command                                |
 | ------ | -------------------------------------- |
 | Ubuntu | `sudo apt install ansible git -y`      |
 | Arch   | `sudo pacman -S ansible git --noconfirm` |
 | macOS  | `brew install ansible git`             |
-
-**2. Run it**
-
-```bash
-ansible-pull -U https://github.com/brucechanjianle/ansible --ask-become-pass
-```
-
-Note that additional setup is skipped on arm architecture.
 
 <details>
 <summary><strong>macOS the nix way (nix-darwin)</strong></summary>
@@ -56,6 +48,14 @@ sudo darwin-rebuild switch --flake ~/.config/nix-darwin#$USER
 
 </details>
 
+**2. Run it**
+
+```bash
+ansible-pull -U https://github.com/brucechanjianle/ansible --ask-become-pass
+```
+
+Note that additional setup is skipped on arm architecture.
+
 <details>
 <summary><strong>Other setup options</strong></summary>
 
@@ -65,10 +65,10 @@ sudo darwin-rebuild switch --flake ~/.config/nix-darwin#$USER
 ansible-pull -U https://github.com/brucechanjianle/ansible --skip-tags additional --ask-become-pass
 ```
 
-**Full setup with decryption** (for all you supporters out there):
+**Full setup with decryption**:
 
 ```bash
-ANSIBLE_ASK_VAULT_PASS=True ansible-pull -U https://github.com/brucechanjianle/ansible --ask-vault-pass -e "decrypt_bri=true" --ask-become-pass
+ANSIBLE_ASK_VAULT_PASS=True ansible-pull -U https://github.com/brucechanjianle/ansible --ask-vault-pass -e "decrypt_cjl=true" --ask-become-pass
 ```
 
 **For others** - setting up for a specific group of users defined in the
