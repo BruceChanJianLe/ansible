@@ -7,7 +7,7 @@
     accept_hostkey: yes
     version: master
     bare: false
-  when: "{{ decrypt_bri }}"
+  when: decrypt_bri or decrypt_cjl
   tags:
     - setup
     - private_aliases
