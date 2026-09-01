@@ -1,8 +1,22 @@
+- name: Check for local modifications in the zsh config repo
+  ansible.builtin.command:
+    cmd: git status --porcelain --untracked-files=no
+    chdir: "{{ ansible_facts['env']['HOME'] }}/.config/zsh"
+  register: zsh_local_mods
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  tags:
+    - setup
+    - zsh
+
 - name: Clone zsh
   ansible.builtin.git:
     repo: 'https://github.com/brucechanjianle/zsh.git'
     dest: "{{ ansible_facts['env']['HOME'] }}/.config/zsh"
     version: "{{ dotfile_branch }}"
+    # Absent/not-a-repo -> stdout is empty -> update is irrelevant, it clones.
+    update: "{{ zsh_local_mods.stdout == '' }}"
   tags:
     - setup
     - zsh
