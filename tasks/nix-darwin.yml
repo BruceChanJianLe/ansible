@@ -1,8 +1,12 @@
 - name: Check if Nix is installed
-  command: which nix
+  ansible.builtin.shell: >-
+    command -v nix
+    || test -x /nix/var/nix/profiles/default/bin/nix
+    || test -x "$HOME/.nix-profile/bin/nix"
   register: nix_installed
   changed_when: false
-  ignore_errors: true
+  failed_when: false
+  check_mode: false
   tags:
     - setup
     - nix
