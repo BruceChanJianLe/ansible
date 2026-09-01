@@ -7,10 +7,24 @@
     - setup
     - tmux
 
+- name: Check for local modifications in the tmux config repo
+  ansible.builtin.command:
+    cmd: git status --porcelain --untracked-files=no
+    chdir: "{{ ansible_facts['env']['HOME'] }}/.config/tmux"
+  register: tmux_local_mods
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  tags:
+    - setup
+    - tmux
+
 - name: Clone tmux
   ansible.builtin.git:
     repo: 'https://github.com/brucechanjianle/tmux.git'
     dest: "{{ ansible_facts['env']['HOME'] }}/.config/tmux"
+    # Absent/not-a-repo -> stdout is empty -> update is irrelevant, it clones.
+    update: "{{ tmux_local_mods.stdout == '' }}"
   tags:
     - setup
     - tmux
