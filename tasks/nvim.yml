@@ -8,12 +8,24 @@
   - setup
   - nvim
 
+- name: Check if ripgrep is already installed
+  ansible.builtin.command: rg --version
+  register: ripgrep_check
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  tags:
+    - setup
+    - nvim
+
 - name: Get ripgrep x86
   ansible.builtin.get_url:
     url: "https://github.com/BurntSushi/ripgrep/releases/download/{{ ripgrep_version }}/ripgrep_{{ ripgrep_version }}-1_amd64.deb"
     dest: "{{ ansible_facts['env']['HOME'] }}/Downloads/ripgrep_{{ ripgrep_version }}-1_amd64.deb"
     mode: '0664'
-  when: ansible_facts['architecture'] == "x86_64"
+  when:
+    - ripgrep_check.rc != 0
+    - ansible_facts['architecture'] == "x86_64"
   tags:
     - setup
     - nvim
@@ -22,7 +34,19 @@
   become: yes
   ansible.builtin.apt:
     deb: "{{ ansible_facts['env']['HOME'] }}/Downloads/ripgrep_{{ ripgrep_version }}-1_amd64.deb"
-  when: ansible_facts['architecture'] == "x86_64"
+  when:
+    - ripgrep_check.rc != 0
+    - ansible_facts['architecture'] == "x86_64"
+  tags:
+    - setup
+    - nvim
+
+- name: Check if fd is already installed
+  ansible.builtin.command: fd --version
+  register: fd_check
+  changed_when: false
+  failed_when: false
+  check_mode: false
   tags:
     - setup
     - nvim
@@ -32,7 +56,9 @@
     url: "https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_amd64.deb"
     dest: "{{ ansible_facts['env']['HOME'] }}/Downloads/fd-musl_{{ fd_version }}_amd64.deb"
     mode: '0664'
-  when: ansible_facts['architecture'] == "x86_64"
+  when:
+    - fd_check.rc != 0
+    - ansible_facts['architecture'] == "x86_64"
   tags:
     - setup
     - nvim
@@ -41,7 +67,9 @@
   become: yes
   ansible.builtin.apt:
     deb: "{{ ansible_facts['env']['HOME'] }}/Downloads/fd-musl_{{ fd_version }}_amd64.deb"
-  when: ansible_facts['architecture'] == "x86_64"
+  when:
+    - fd_check.rc != 0
+    - ansible_facts['architecture'] == "x86_64"
   tags:
     - setup
     - nvim
@@ -51,7 +79,9 @@
     url: "https://github.com/sharkdp/fd/releases/download/v{{ fd_version }}/fd-musl_{{ fd_version }}_arm64.deb"
     dest: "{{ ansible_facts['env']['HOME'] }}/Downloads/fd-musl_{{ fd_version }}_arm64.deb"
     mode: '0664'
-  when: ansible_facts['architecture'] == "aarch64"
+  when:
+    - fd_check.rc != 0
+    - ansible_facts['architecture'] == "aarch64"
   tags:
     - setup
     - nvim
@@ -60,7 +90,9 @@
   become: yes
   ansible.builtin.apt:
     deb: "{{ ansible_facts['env']['HOME'] }}/Downloads/fd-musl_{{ fd_version }}_arm64.deb"
-  when: ansible_facts['architecture'] == "aarch64"
+  when:
+    - fd_check.rc != 0
+    - ansible_facts['architecture'] == "aarch64"
   tags:
     - setup
     - nvim
