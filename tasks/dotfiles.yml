@@ -91,6 +91,8 @@
   tags:
   - never
   - nix_darwin
+  - setup
+  - dotfiles
 
 - name: Fail early if the flake is missing
   ansible.builtin.fail:
@@ -102,6 +104,25 @@
   tags:
   - never
   - nix_darwin
+
+# Homebrew uses XDG_CONFIG_HOME once the shell is set up, but sudo still looks in ~/.homebrew
+- name: Ensure homebrew config directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.config/homebrew"
+    state: directory
+    mode: "0700"
+  tags:
+  - setup
+  - dotfiles
+
+- name: Symlink ~/.homebrew to homebrew config directory
+  ansible.builtin.file:
+    src: "{{ ansible_facts['env']['HOME'] }}/.config/homebrew"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.homebrew"
+    state: link
+  tags:
+  - setup
+  - dotfiles
 
 # sudo nix run nix-darwin -- switch --flake ~/.config/nix-darwin#<user>
 - name: Activate nix-darwin
