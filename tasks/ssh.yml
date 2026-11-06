@@ -14,7 +14,6 @@
     users:
       - { name: "id_cjl" }
       - { name: "id_bri" }
-      - { name: "id_elip" }
   ansible.builtin.get_url:
     url: "https://raw.githubusercontent.com/BruceChanJianLe/dotfiles/refs/heads/master/.dotfiles/resources/{{ item['name'] }}"
     dest: "{{ ansible_facts['env']['HOME'] }}/.ssh/{{ item['name'] }}"
@@ -31,7 +30,6 @@
     users:
       - { name: "id_cjl.pub" }
       - { name: "id_bri.pub" }
-      - { name: "id_elip.pub" }
   ansible.builtin.get_url:
     url: "https://raw.githubusercontent.com/BruceChanJianLe/dotfiles/refs/heads/master/.dotfiles/resources/{{ item['name'] }}"
     dest: "{{ ansible_facts['env']['HOME'] }}/.ssh/{{ item['name'] }}"
@@ -54,17 +52,6 @@
   - setup
 
 - name: Ask the Magic Conch Shell (2)
-  ansible.builtin.copy:
-    src: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_elip"
-    dest: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_elip"
-    mode: '600'
-    decrypt: "{{ decrypt_elip }}"
-  tags:
-  - ssh
-  - dotfiles
-  - setup
-
-- name: Ask the Magic Conch Shell (3)
   ansible.builtin.copy:
     src: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_cjl"
     dest: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_cjl"
