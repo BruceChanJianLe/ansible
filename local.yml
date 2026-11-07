@@ -2,7 +2,6 @@
   vars:
     dotfile_branch: "master"
     decrypt_bri: false
-    decrypt_elip: false
     decrypt_cjl: false
     ripgrep_version: 15.1.0
     fd_version: 10.3.0
